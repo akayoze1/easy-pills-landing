@@ -282,12 +282,17 @@
                             <i data-lucide="fingerprint"></i>
                         </div>
                         <h3 class="tech-card-title" data-en="Biometric Identity" data-ar="الهوية البيومترية">Biometric Identity</h3>
-                        <p class="tech-card-text" data-en="Optical fingerprint sensor enabling multi-user authentication with 99.9% accuracy." data-ar="مستشعر بصمة ضوئي يتيح مصادقة متعددة المستخدمين بدقة 99.9٪.">
-                            Optical fingerprint sensor enabling multi-user 
-                            authentication with 99.9% accuracy.
+                        <p class="tech-card-text" 
+                            data-en="Optical fingerprint sensor enabling secure multi-user authentication." 
+                            data-ar="مستشعر بصمة ضوئي يتيح مصادقة آمنة لعدة مستخدمين.">
+                            Optical fingerprint sensor enabling secure multi-user 
+                             authentication.
                         </p>
-                        <div class="tech-card-detail" data-en="The R307 optical fingerprint module captures high-resolution images of fingerprints at 500 DPI. It stores up to 1000 fingerprint templates in onboard flash memory." data-ar="تلتقط وحدة البصمة الضوئية R307 صوراً عالية الدقة للبصمات بدقة 500 نقطة في البوصة. وتخزّن ما يصل إلى 1000 قالب بصمة في ذاكرة فلاش مدمجة.">
-                            The R307 optical fingerprint module captures high-resolution images of fingerprints at 500 DPI. It stores up to 1000 fingerprint templates in onboard flash memory.
+
+                        <div class="tech-card-detail" 
+                        data-en="The AS608 optical fingerprint module captures fingerprint images and stores up to 1000 fingerprint templates in onboard flash memory. It communicates with the ESP32 via UART to provide authorized access control." 
+                         data-ar="تقوم وحدة البصمة الضوئية AS608 بالتقاط صور البصمات وتخزين ما يصل إلى 1000 قالب بصمة في ذاكرة فلاش مدمجة. وتتواصل مع وحدة ESP32 عبر بروتوكول UART لتوفير التحكم في الوصول المصرح به.">
+                        The AS608 optical fingerprint module captures fingerprint images and stores up to 1000 fingerprint templates in onboard flash memory. It communicates with the ESP32 via UART to provide authorized access control.
                         </div>
                     </div>
 
@@ -296,12 +301,16 @@
                             <i data-lucide="cog"></i>
                         </div>
                         <h3 class="tech-card-title" data-en="Robotic Dispensing" data-ar="التوزيع الروبوتي">Robotic Dispensing</h3>
-                        <p class="tech-card-text" data-en="NEMA-17 stepper motors provide precise rotational control for exact dosage delivery." data-ar="توفر محركات NEMA-17 الخطوية تحكماً دورانياً دقيقاً لتوصيل الجرعة بدقة متناهية.">
-                            NEMA-17 stepper motors provide precise rotational 
-                            control for exact dosage delivery.
+                        <p class="tech-card-text" 
+                            data-en="28BYJ-48 stepper motors provide precise rotational control for accurate pill positioning and dispensing." 
+                            data-ar="توفر محركات 28BYJ-48 الخطوية تحكماً دورانياً دقيقاً لتحديد موضع الدواء وتوزيعه بدقة.">
+                            28BYJ-48 stepper motors provide precise rotational 
+                            control for accurate pill positioning and dispensing.
                         </p>
-                        <div class="tech-card-detail" data-en="Each NEMA-17 motor delivers 0.45 N·m of holding torque with 1.8° step resolution (200 steps/revolution)." data-ar="يوفر كل محرك NEMA-17 عزم دوران ثابت بقوة 0.45 نيوتن متر مع دقة خطوة 1.8 درجة (200 خطوة/دورة).">
-                            Each NEMA-17 motor delivers 0.45 N·m of holding torque with 1.8° step resolution (200 steps/revolution).
+                        <div class="tech-card-detail" 
+                            data-en="Two 28BYJ-48 stepper motors are controlled by the ESP32 through ULN2003 driver boards. Each motor provides 4096 steps per revolution with gear reduction, enabling accurate positioning of the medication compartments and controlled pill release." 
+                            data-ar="يتم التحكم في محركين خطويين من نوع 28BYJ-48 بواسطة وحدة ESP32 عبر لوحات تشغيل ULN2003. ويوفر كل محرك 4096 خطوة في كل دورة بفضل نظام التروس، مما يسمح بتحديد موضع حجرات الدواء بدقة والتحكم في إخراج الحبوب.">
+                            Two 28BYJ-48 stepper motors are controlled by the ESP32 through ULN2003 driver boards. Each motor provides 4096 steps per revolution with gear reduction, enabling accurate positioning of the medication compartments and controlled pill release.
                         </div>
                     </div>
 
@@ -310,12 +319,12 @@
                             <i data-lucide="cloud"></i>
                         </div>
                         <h3 class="tech-card-title" data-en="Cloud Infrastructure" data-ar="البنية السحابية">Cloud Infrastructure</h3>
-                        <p class="tech-card-text" data-en="Firebase Realtime Database integration for instant synchronization of logs and schedules." data-ar="تكامل مع قاعدة بيانات Firebase للمزامنة الفورية للسجلات والجداول الزمنية.">
-                            Firebase Realtime Database integration for instant 
-                            synchronization of logs and schedules.
+                        <p class="tech-card-text" data-en="Firebase Firestore integration for secure synchronization of medication logs and schedules." data-ar="تكامل مع Firebase Firestore للمزامنة الآمنة لسجلات الأدوية والجداول الزمنية.">
+                            Firebase Firestore integration for secure 
+                            synchronization of medication logs and schedules.
                         </p>
-                        <div class="tech-card-detail" data-en="The cloud backend leverages Firebase Realtime Database for sub-100ms data synchronization across all connected devices." data-ar="تستفيد الواجهة الخلفية السحابية من Firebase لمزامنة البيانات في أقل من 100 مللي ثانية عبر جميع الأجهزة المتصلة.">
-                            The cloud backend leverages Firebase Realtime Database for sub-100ms data synchronization across all connected devices.
+                        <div class="tech-card-detail" data-en="The cloud backend uses Firebase Firestore as the primary database platform to synchronize medication schedules, dispensing logs, and user data between the device, mobile application, and doctor monitoring portal." data-ar="تستخدم الواجهة الخلفية السحابية Firebase Firestore كمنصة قاعدة البيانات الأساسية لمزامنة جداول الأدوية وسجلات التوزيع وبيانات المستخدم بين الجهاز وتطبيق الهاتف المحمول وبوابة مراقبة الطبيب.">
+                            The cloud backend uses Firebase Firestore as the primary database platform to synchronize medication schedules, dispensing logs, and user data between the device, mobile application, and doctor monitoring portal.
                         </div>
                     </div>
 
@@ -324,12 +333,12 @@
                             <i data-lucide="lock"></i>
                         </div>
                         <h3 class="tech-card-title" data-en="Security Protocols" data-ar="بروتوكولات الأمان">Security Protocols</h3>
-                        <p class="tech-card-text" data-en="Physical chassis reinforcement combined with digital locking mechanisms." data-ar="تعزيز الهيكل المادي مع آليات قفل رقمية متقدمة.">
-                            Physical chassis reinforcement combined with 
-                            digital locking mechanisms.
+                        <p class="tech-card-text" data-en="Digital locking mechanisms combined with biometric and password-based access control." data-ar="آليات قفل رقمية مجتمعة مع التحكم في الوصول البيومتري والقائم على كلمة المرور.">
+                            Digital locking mechanisms combined with biometric 
+                            and password-based access control.
                         </p>
-                        <div class="tech-card-detail" data-en="The enclosure features a 3mm aluminum chassis with tamper-evident seals and TLS 1.3 encryption." data-ar="يتميز الغلاف بهيكل من الألمنيوم بسماكة 3 مم مع أختام مقاومة للعبث وتشفير TLS 1.3.">
-                            The enclosure features a 3mm aluminum chassis with tamper-evident seals and TLS 1.3 encryption.
+                        <div class="tech-card-detail" data-en="The system uses fingerprint authentication and a password-protected electric lock to prevent unauthorized access. The access code changes every 12 or 24 hours and is sent to the owner, providing an additional layer of physical security." data-ar="يستخدم النظام المصادقة بالبصمة وقفل كهربائي محمي بكلمة مرور لمنع الوصول غير المصرح به. يتغير رمز الوصول كل 12 أو 24 ساعة ويُرسل إلى المالك، مما يوفر طبقة إضافية من الأمان المادي.">
+                            The system uses fingerprint authentication and a password-protected electric lock to prevent unauthorized access. The access code changes every 12 or 24 hours and is sent to the owner, providing an additional layer of physical security.
                         </div>
                     </div>
 
@@ -342,8 +351,8 @@
                             Local audiovisual alerts synchronized with 
                             mobile push notifications.
                         </p>
-                        <div class="tech-card-detail" data-en="The notification system combines a piezoelectric buzzer for audio alerts with RGB LED strips for visual indication." data-ar="يجمع نظام الإشعارات بين صفارة كهرضغطية للتنبيهات الصوتية وشرائط LED RGB للإشارة المرئية.">
-                            The notification system combines a piezoelectric buzzer for audio alerts with RGB LED strips for visual indication.
+                        <div class="tech-card-detail" data-en="The notification system combines an active buzzer for audio alerts with LED status indicators for visual notifications." data-ar="يجمع نظام الإشعارات بين صفارة نشطة للتنبيهات الصوتية ومؤشرات LED للحالة للإشعارات المرئية.">
+                            The notification system combines an active buzzer for audio alerts with LED status indicators for visual notifications.
                         </div>
                     </div>
 
@@ -352,12 +361,12 @@
                             <i data-lucide="calendar-clock"></i>
                         </div>
                         <h3 class="tech-card-title" data-en="Inventory Intelligence" data-ar="ذكاء المخزون">Inventory Intelligence</h3>
-                        <p class="tech-card-text" data-en="Automated tracking of remaining pill counts and expiration dates." data-ar="تتبع آلي للكمية المتبقية من الحبوب وتواريخ انتهاء الصلاحية.">
-                            Automated tracking of remaining pill counts 
-                            and expiration dates.
+                        <p class="tech-card-text" data-en="Automated tracking of dispensed doses and expiration dates through cloud logging." data-ar="تتبع آلي للجرعات الموزعة وتواريخ انتهاء الصلاحية من خلال التسجيل السحابي.">
+                            Automated tracking of dispensed doses and expiration 
+                            dates through cloud logging.
                         </p>
-                        <div class="tech-card-detail" data-en="Load cells beneath each compartment measure medication weight with 0.1g precision, automatically calculating remaining doses." data-ar="تقيس خلايا الحمل أسفل كل حجرة وزن الدواء بدقة 0.1 جرام، محسوبة تلقائياً الجرعات المتبقية.">
-                            Load cells beneath each compartment measure medication weight with 0.1g precision, automatically calculating remaining doses.
+                        <div class="tech-card-detail" data-en="The system tracks medication dispensing events and expiration dates using cloud-based logs. Each dispensing operation is recorded with the medication type, quantity, and timestamp to monitor adherence and inventory status." data-ar="يتتبع النظام أحداث توزيع الأدوية وتواريخ انتهاء الصلاحية باستخدام السجلات السحابية. يتم تسجيل كل عملية توزيع مع نوع الدواء والكمية والطابع الزمني لمراقبة الالتزام وحالة المخزون.">
+                            The system tracks medication dispensing events and expiration dates using cloud-based logs. Each dispensing operation is recorded with the medication type, quantity, and timestamp to monitor adherence and inventory status.
                         </div>
                     </div>
                 </div>
@@ -458,8 +467,8 @@
                                 </div>
                                 <div class="stack-item-content">
                                     <h4 class="stack-item-title" data-en="Embedded Hardware" data-ar="الأجهزة المدمجة">Embedded Hardware</h4>
-                                    <p class="stack-item-text" data-en="ESP32 MCU • NEMA-17 Steppers • Optical Fingerprint Sensor • I2C LCD Integration" data-ar="متحكم ESP32 • محركات خطوية NEMA-17 • مستشعر بصمة ضوئي • تكامل شاشة I2C LCD">
-                                        ESP32 MCU • NEMA-17 Steppers • Optical Fingerprint Sensor • I2C LCD Integration
+                                    <p class="stack-item-text" data-en="ESP32 MCU • 28BYJ-48 Stepper Motors • AS608 Fingerprint Sensor • TM1637 4-Digit Display" data-ar="متحكم ESP32 • محركات خطوية 28BYJ-48 • مستشعر بصمة AS608 • شاشة TM1637 رباعية الأرقام">
+                                        ESP32 MCU • 28BYJ-48 Stepper Motors • AS608 Fingerprint Sensor • TM1637 4-Digit Display
                                     </p>
                                 </div>
                             </div>
@@ -583,7 +592,7 @@
                                 </div>
                                 <div class="contact-detail-content">
                                     <span class="contact-detail-label" data-en="Email Us" data-ar="راسلنا">Email Us</span>
-                                    <a href="mailto:team@easypills.io" class="contact-detail-value">team@easypills.io</a>
+                                    <a href="mailto:yousefmaher.1@iliauni.edu.ge" class="contact-detail-value">yousefmaher.1@iliauni.edu.ge</a>
                                 </div>
                             </div>
                             <div class="contact-detail" data-reveal>

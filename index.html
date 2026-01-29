@@ -26,6 +26,12 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <!-- Three.js for 3D Model Viewer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -75,6 +81,9 @@
                 <a href="#technology" class="nav-link" data-magnetic>
                     <span class="nav-link-text" data-en="Technology" data-ar="التقنية">Technology</span>
                 </a>
+                <a href="#device-model" class="nav-link" data-magnetic>
+                    <span class="nav-link-text" data-en="3D Model" data-ar="نموذج ثلاثي الأبعاد">3D Model</span>
+                </a>
                 <a href="#process" class="nav-link" data-magnetic>
                     <span class="nav-link-text" data-en="Process" data-ar="العملية">Process</span>
                 </a>
@@ -109,16 +118,20 @@
                 <span class="mobile-menu-link-number">02</span>
                 <span class="mobile-menu-link-text" data-en="Technology" data-ar="التقنية">Technology</span>
             </a>
-            <a href="#process" class="mobile-menu-link">
+            <a href="#device-model" class="mobile-menu-link">
                 <span class="mobile-menu-link-number">03</span>
+                <span class="mobile-menu-link-text" data-en="3D Model" data-ar="نموذج ثلاثي الأبعاد">3D Model</span>
+            </a>
+            <a href="#process" class="mobile-menu-link">
+                <span class="mobile-menu-link-number">04</span>
                 <span class="mobile-menu-link-text" data-en="Process" data-ar="العملية">Process</span>
             </a>
             <a href="#team" class="mobile-menu-link">
-                <span class="mobile-menu-link-number">04</span>
+                <span class="mobile-menu-link-number">05</span>
                 <span class="mobile-menu-link-text" data-en="Team" data-ar="الفريق">Team</span>
             </a>
             <a href="#contact" class="mobile-menu-link">
-                <span class="mobile-menu-link-number">05</span>
+                <span class="mobile-menu-link-number">06</span>
                 <span class="mobile-menu-link-text" data-en="Contact" data-ar="تواصل">Contact</span>
             </a>
             <button class="mobile-lang-toggle" id="mobile-lang-toggle">
@@ -368,6 +381,40 @@
                         <div class="tech-card-detail" data-en="The system tracks medication dispensing events and expiration dates using cloud-based logs. Each dispensing operation is recorded with the medication type, quantity, and timestamp to monitor adherence and inventory status." data-ar="يتتبع النظام أحداث توزيع الأدوية وتواريخ انتهاء الصلاحية باستخدام السجلات السحابية. يتم تسجيل كل عملية توزيع مع نوع الدواء والكمية والطابع الزمني لمراقبة الالتزام وحالة المخزون.">
                             The system tracks medication dispensing events and expiration dates using cloud-based logs. Each dispensing operation is recorded with the medication type, quantity, and timestamp to monitor adherence and inventory status.
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3D Model Viewer Section -->
+        <section class="section model-section" id="device-model">
+            <div class="container">
+                <div class="section-header section-header-full">
+                    <span class="section-number" data-reveal>02.5</span>
+                    <h2 class="section-title-large" data-reveal data-en="Interactive Device Model" data-ar="نموذج الجهاز التفاعلي">
+                        Interactive <span class="italic">Device Model</span>
+                    </h2>
+                    <p class="section-description" data-reveal data-en="Explore the Easy Pills device in 3D. Click and drag to rotate, scroll to zoom." data-ar="استكشف جهاز إيزي بيلز ثلاثي الأبعاد. انقر واسحب للتدوير، ومرر للتكبير.">
+                        Explore the Easy Pills device in 3D. Click and drag to rotate, scroll to zoom.
+                    </p>
+                </div>
+
+                <div class="model-viewer-container" data-reveal>
+                    <div class="model-viewer" id="model-viewer">
+                        <div class="model-loading" id="model-loading">
+                            <div class="model-loading-spinner"></div>
+                            <span data-en="Loading 3D Model..." data-ar="جاري تحميل النموذج...">Loading 3D Model...</span>
+                        </div>
+                    </div>
+                    <div class="model-controls">
+                        <button class="model-control-btn" id="reset-view" data-magnetic aria-label="Reset view">
+                            <i data-lucide="rotate-ccw"></i>
+                            <span data-en="Reset View" data-ar="إعادة ضبط">Reset View</span>
+                        </button>
+                        <button class="model-control-btn" id="auto-rotate-toggle" data-magnetic aria-label="Toggle auto-rotate">
+                            <i data-lucide="refresh-cw"></i>
+                            <span data-en="Auto Rotate" data-ar="دوران تلقائي">Auto Rotate</span>
+                        </button>
                     </div>
                 </div>
             </div>

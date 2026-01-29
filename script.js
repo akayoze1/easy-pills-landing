@@ -679,3 +679,570 @@ window.addEventListener('resize', () => {
         ScrollTrigger.refresh();
     }, 250);
 });
+
+// =====================================================
+// 3D MODEL VIEWER - Professional Grade Implementation
+// Advanced Controls, Materials & Lighting System
+// =====================================================
+
+class EasyPills3DViewer {
+    constructor(containerId) {
+        this.container = document.getElementById(containerId);
+        this.loadingEl = document.getElementById('model-loading');
+        this.resetBtn = document.getElementById('reset-view');
+        this.autoRotateBtn = document.getElementById('auto-rotate-toggle');
+        
+        if (!this.container) return;
+        
+        // Core Three.js components
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.controls = null;
+        this.model = null;
+        this.clock = new THREE.Clock();
+        
+        // Animation state
+        this.isAutoRotating = false;
+        this.targetRotationY = 0;
+        this.currentRotationY = 0;
+        this.rotationVelocity = 0;
+        this.isDragging = false;
+        this.previousMousePosition = { x: 0, y: 0 };
+        
+        // Camera animation state
+        this.cameraAnimating = false;
+        this.cameraStartPos = null;
+        this.cameraEndPos = null;
+        this.cameraProgress = 0;
+        
+        // Touch handling
+        this.touchStartDistance = 0;
+        this.initialPinchDistance = 0;
+        this.lastTouchTime = 0;
+        
+        // Initial positions for reset
+        this.initialCameraPosition = new THREE.Vector3(0, 12, 35);
+        this.initialControlsTarget = new THREE.Vector3(0, 0, 0);
+        
+        // Material presets
+        this.materialPresets = {
+            metallic: {
+                color: 0xE8DDD4,
+                metalness: 0.85,
+                roughness: 0.15,
+                envMapIntensity: 1.2
+            },
+            matte: {
+                color: 0xF5EDE6,
+                metalness: 0.1,
+                roughness: 0.8,
+                envMapIntensity: 0.3
+            },
+            plastic: {
+                color: 0xFAF7F2,
+                metalness: 0.0,
+                roughness: 0.4,
+                envMapIntensity: 0.5
+            }
+        };
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupRenderer();  // Must be first for PMREMGenerator
+        this.setupScene();
+        this.setupCamera();
+        this.setupLighting();
+        this.setupControls();
+        this.setupEventListeners();
+        this.loadModel();
+        this.animate();
+    }
+    
+    setupScene() {
+        this.scene = new THREE.Scene();
+        
+        // Subtle gradient background using fog
+        this.scene.fog = new THREE.Fog(0xFAF7F2, 80, 150);
+    }
+    
+    setupCamera() {
+        const aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera = new THREE.PerspectiveCamera(40, aspect, 0.1, 500);
+        this.camera.position.copy(this.initialCameraPosition);
+        this.camera.lookAt(0, 0, 0);
+    }
+    
+    setupRenderer() {
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance'
+        });
+        
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.2;
+        this.renderer.physicallyCorrectLights = true;
+        
+        this.container.appendChild(this.renderer.domElement);
+    }
+    
+    setupLighting() {
+        // Ambient light - soft fill
+        const ambientLight = new THREE.AmbientLight(0xFAF7F2, 0.4);
+        this.scene.add(ambientLight);
+        
+        // Main key light - warm white from top-right
+        const keyLight = new THREE.DirectionalLight(0xFFFFFF, 1.2);
+        keyLight.position.set(15, 25, 20);
+        keyLight.castShadow = true;
+        keyLight.shadow.mapSize.width = 2048;
+        keyLight.shadow.mapSize.height = 2048;
+        keyLight.shadow.camera.near = 0.5;
+        keyLight.shadow.camera.far = 100;
+        keyLight.shadow.camera.left = -30;
+        keyLight.shadow.camera.right = 30;
+        keyLight.shadow.camera.top = 30;
+        keyLight.shadow.camera.bottom = -30;
+        keyLight.shadow.bias = -0.0001;
+        keyLight.shadow.radius = 4;
+        this.scene.add(keyLight);
+        
+        // Fill light - cooler tone from left
+        const fillLight = new THREE.DirectionalLight(0xB4C7E7, 0.6);
+        fillLight.position.set(-20, 10, -10);
+        this.scene.add(fillLight);
+        
+        // Accent light - terracotta warmth from back
+        const accentLight = new THREE.DirectionalLight(0xC17F59, 0.5);
+        accentLight.position.set(-5, 15, -25);
+        this.scene.add(accentLight);
+        
+        // Rim light - subtle highlight from behind
+        const rimLight = new THREE.DirectionalLight(0xFFE4D6, 0.4);
+        rimLight.position.set(0, 5, -30);
+        this.scene.add(rimLight);
+        
+        // Ground bounce light
+        const bounceLight = new THREE.DirectionalLight(0xEDE8DE, 0.3);
+        bounceLight.position.set(0, -20, 10);
+        this.scene.add(bounceLight);
+        
+        // Hemisphere light for natural sky/ground gradient
+        const hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0xC17F59, 0.3);
+        hemiLight.position.set(0, 50, 0);
+        this.scene.add(hemiLight);
+        
+        // Subtle point lights for sparkle
+        const sparkleLight1 = new THREE.PointLight(0xFFFFFF, 0.3, 50);
+        sparkleLight1.position.set(10, 20, 15);
+        this.scene.add(sparkleLight1);
+        
+        const sparkleLight2 = new THREE.PointLight(0xC17F59, 0.2, 40);
+        sparkleLight2.position.set(-15, 10, 10);
+        this.scene.add(sparkleLight2);
+    }
+    
+    setupControls() {
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        
+        // Professional damping for smooth movement
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.08;
+        
+        // Rotation settings
+        this.controls.rotateSpeed = 0.5;
+        this.controls.enableRotate = true;
+        
+        // Pan settings
+        this.controls.enablePan = true;
+        this.controls.panSpeed = 0.5;
+        this.controls.screenSpacePanning = true;
+        
+        // Zoom settings
+        this.controls.enableZoom = true;
+        this.controls.zoomSpeed = 0.8;
+        this.controls.minDistance = 15;
+        this.controls.maxDistance = 80;
+        
+        // No angle constraints - infinite 360° rotation in any direction
+        this.controls.minPolarAngle = 0;
+        this.controls.maxPolarAngle = Math.PI;
+        this.controls.minAzimuthAngle = -Infinity;
+        this.controls.maxAzimuthAngle = Infinity;
+        
+        // Auto rotate (off by default)
+        this.controls.autoRotate = false;
+        this.controls.autoRotateSpeed = 1.5;
+        
+        // Set initial target
+        this.controls.target.copy(this.initialControlsTarget);
+        this.controls.update();
+    }
+    
+    setupEventListeners() {
+        // Reset button
+        if (this.resetBtn) {
+            this.resetBtn.addEventListener('click', () => this.resetView());
+        }
+        
+        // Auto rotate toggle
+        if (this.autoRotateBtn) {
+            this.autoRotateBtn.addEventListener('click', () => this.toggleAutoRotate());
+        }
+        
+        // Window resize
+        window.addEventListener('resize', () => this.onResize());
+        
+        // Prevent scroll interference
+        this.container.addEventListener('wheel', (e) => {
+            e.stopPropagation();
+        }, { passive: false });
+        
+        this.container.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        this.container.addEventListener('touchmove', (e) => {
+            e.stopPropagation();
+        }, { passive: false });
+        
+        // Double-click to reset view
+        this.container.addEventListener('dblclick', () => this.resetView());
+        
+        // Double-tap for mobile
+        this.container.addEventListener('touchend', (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - this.lastTouchTime;
+            if (tapLength < 300 && tapLength > 0) {
+                this.resetView();
+            }
+            this.lastTouchTime = currentTime;
+        });
+        
+        // Track interaction state
+        this.controls.addEventListener('start', () => {
+            this.isDragging = true;
+            this.container.style.cursor = 'grabbing';
+        });
+        
+        this.controls.addEventListener('end', () => {
+            this.isDragging = false;
+            this.container.style.cursor = 'grab';
+        });
+    }
+    
+    createMaterial() {
+        // Premium material with subtle iridescence effect
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0xF5EDE6,
+            metalness: 0.15,
+            roughness: 0.35,
+            clearcoat: 0.3,
+            clearcoatRoughness: 0.4,
+            reflectivity: 0.5,
+            envMapIntensity: 0.8,
+            transparent: false,
+            side: THREE.DoubleSide
+        });
+        
+        return material;
+    }
+    
+    createAccentMaterial() {
+        // Terracotta accent material for highlights
+        return new THREE.MeshPhysicalMaterial({
+            color: 0xC17F59,
+            metalness: 0.3,
+            roughness: 0.4,
+            clearcoat: 0.2,
+            clearcoatRoughness: 0.3,
+            envMapIntensity: 0.6
+        });
+    }
+    
+    loadModel() {
+        const objLoader = new THREE.OBJLoader();
+        const mtlLoader = new THREE.MTLLoader();
+        
+        // Set paths for both loaders
+        const modelPath = './';
+        mtlLoader.setPath(modelPath);
+        objLoader.setPath(modelPath);
+        
+        // Try MTL first - the OBJ file references "3D_model.mtl"
+        mtlLoader.load(
+            '3D_model.mtl',
+            (materials) => {
+                // MTL loaded successfully
+                materials.preload();
+                objLoader.setMaterials(materials);
+                this.loadOBJ(objLoader);
+            },
+            undefined,
+            (error) => {
+                // MTL not found, load OBJ with custom materials (this is expected)
+                console.log('MTL file not found, using custom materials instead');
+                this.loadOBJ(objLoader);
+            }
+        );
+    }
+    
+    loadOBJ(loader) {
+        // Load the OBJ file - try with and without leading ./
+        const objPath = './3D_model.obj';
+        
+        loader.load(
+            objPath,
+            (object) => {
+                // Successfully loaded
+                this.onModelLoaded(object);
+            },
+            (xhr) => {
+                // Progress callback
+                this.onLoadProgress(xhr);
+            },
+            (error) => {
+                // Error loading OBJ - try alternative path
+                console.warn(`Failed to load ${objPath}, trying alternative path...`);
+                loader.load(
+                    '3D_model.obj',
+                    (object) => this.onModelLoaded(object),
+                    (xhr) => this.onLoadProgress(xhr),
+                    (error) => {
+                        // Both paths failed
+                        console.error('Failed to load OBJ from both paths:', error);
+                        this.onLoadError(error || new Error('Could not load 3D_model.obj'));
+                    }
+                );
+            }
+        );
+    }
+    
+    onModelLoaded(object) {
+        this.model = object;
+        
+        // Calculate bounding box and center
+        const box = new THREE.Box3().setFromObject(object);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        
+        // Center the model
+        object.position.sub(center);
+        
+        // Scale to fit view nicely
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 18 / maxDim;
+        object.scale.multiplyScalar(scale);
+        
+        // Create premium materials
+        const mainMaterial = this.createMaterial();
+        const accentMaterial = this.createAccentMaterial();
+        
+        // Apply materials with variety
+        let meshIndex = 0;
+        object.traverse((child) => {
+            if (child.isMesh) {
+                // Alternate materials for visual interest
+                if (meshIndex % 3 === 0) {
+                    child.material = accentMaterial.clone();
+                } else {
+                    child.material = mainMaterial.clone();
+                }
+                
+                // Enable shadows
+                child.castShadow = true;
+                child.receiveShadow = true;
+                
+                // Compute normals for proper lighting
+                if (child.geometry) {
+                    child.geometry.computeVertexNormals();
+                }
+                
+                meshIndex++;
+            }
+        });
+        
+        // Add to scene
+        this.scene.add(object);
+        
+        // Add subtle ground plane for shadow reception
+        this.addGroundPlane();
+        
+        // Hide loading indicator with fade
+        if (this.loadingEl) {
+            gsap.to(this.loadingEl, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    this.loadingEl.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Animate model entrance
+        object.scale.set(0, 0, 0);
+        gsap.to(object.scale, {
+            x: scale,
+            y: scale,
+            z: scale,
+            duration: 1.2,
+            ease: 'elastic.out(1, 0.5)'
+        });
+        
+        // Update controls
+        this.controls.target.set(0, 0, 0);
+        this.controls.update();
+    }
+    
+    addGroundPlane() {
+        const groundGeometry = new THREE.PlaneGeometry(100, 100);
+        const groundMaterial = new THREE.ShadowMaterial({
+            opacity: 0.15
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -10;
+        ground.receiveShadow = true;
+        this.scene.add(ground);
+    }
+    
+    onLoadProgress(xhr) {
+        if (xhr.total > 0) {
+            const percent = Math.round((xhr.loaded / xhr.total) * 100);
+            console.log(`Loading model: ${percent}%`);
+            
+            if (this.loadingEl) {
+                const loadingText = this.loadingEl.querySelector('span');
+                if (loadingText) {
+                    loadingText.textContent = `Loading 3D Model... ${percent}%`;
+                }
+            }
+        }
+    }
+    
+    onLoadError(error) {
+        console.error('Error loading model:', error);
+        
+        // Check if running from file:// protocol (common CORS issue)
+        const isFileProtocol = window.location.protocol === 'file:';
+        let errorMessage = 'Unable to load 3D model';
+        
+        if (isFileProtocol) {
+            errorMessage += '<br><small style="opacity: 0.7; font-size: 0.85em;">Please use a local server (e.g., Live Server in VS Code)</small>';
+            console.warn('Running from file:// protocol. CORS restrictions may prevent loading 3D files. Use a local server instead.');
+        } else if (error && error.message) {
+            errorMessage += `<br><small style="opacity: 0.7; font-size: 0.85em;">${error.message}</small>`;
+        }
+        
+        if (this.loadingEl) {
+            this.loadingEl.innerHTML = `
+                <span style="color: var(--color-accent);">
+                    ${errorMessage}
+                </span>
+            `;
+        }
+    }
+    
+    resetView() {
+        if (this.cameraAnimating) return;
+        this.cameraAnimating = true;
+        
+        // Smooth camera animation using GSAP
+        const duration = 1.2;
+        
+        gsap.to(this.camera.position, {
+            x: this.initialCameraPosition.x,
+            y: this.initialCameraPosition.y,
+            z: this.initialCameraPosition.z,
+            duration: duration,
+            ease: 'power3.inOut',
+            onUpdate: () => this.controls.update(),
+            onComplete: () => {
+                this.cameraAnimating = false;
+            }
+        });
+        
+        gsap.to(this.controls.target, {
+            x: this.initialControlsTarget.x,
+            y: this.initialControlsTarget.y,
+            z: this.initialControlsTarget.z,
+            duration: duration,
+            ease: 'power3.inOut'
+        });
+        
+        // Reset model rotation if it exists
+        if (this.model) {
+            gsap.to(this.model.rotation, {
+                x: 0,
+                y: 0,
+                z: 0,
+                duration: duration,
+                ease: 'power3.inOut'
+            });
+        }
+    }
+    
+    toggleAutoRotate() {
+        this.controls.autoRotate = !this.controls.autoRotate;
+        
+        if (this.autoRotateBtn) {
+            this.autoRotateBtn.classList.toggle('active', this.controls.autoRotate);
+            
+            // Visual feedback animation
+            gsap.fromTo(this.autoRotateBtn, 
+                { scale: 0.95 },
+                { scale: 1, duration: 0.3, ease: 'back.out(2)' }
+            );
+        }
+    }
+    
+    onResize() {
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
+        
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        
+        const delta = this.clock.getDelta();
+        
+        // Update controls with damping
+        this.controls.update();
+        
+        // Subtle model hover animation when idle
+        if (this.model && !this.isDragging && !this.controls.autoRotate) {
+            const time = this.clock.getElapsedTime();
+            this.model.position.y = Math.sin(time * 0.5) * 0.15;
+        }
+        
+        // Render
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+// Initialize viewer
+function init3DModelViewer() {
+    new EasyPills3DViewer('model-viewer');
+}
+
+// Initialize after page load
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        init3DModelViewer();
+        lucide.createIcons();
+    }, 100);
+});

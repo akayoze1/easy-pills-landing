@@ -5,7 +5,7 @@
    ============================================ */
 
 // 1. API Configuration
-const GEMINI_API_KEY = "AIzaSyD8lNzx7BIyUN68WYdDrS5pCVP8zfGe5z8"; 
+const GEMINI_API_KEY = "AIzaSyB3-3FEKHTdMYUP6LJOIt5jJ4ACKlkF7YQ"; 
 
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 

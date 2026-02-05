@@ -694,6 +694,11 @@ class EasyPills3DViewer {
         
         if (!this.container) return;
         
+        // Detect mobile device for performance optimization
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                       (window.innerWidth <= 768) || 
+                       ('ontouchstart' in window);
+        
         // Core Three.js components
         this.scene = null;
         this.camera = null;
@@ -777,77 +782,103 @@ class EasyPills3DViewer {
     
     setupRenderer() {
         this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
+            antialias: !this.isMobile, // Disable antialiasing on mobile for performance
             alpha: true,
-            powerPreference: 'high-performance'
+            powerPreference: this.isMobile ? 'low-power' : 'high-performance'
         });
         
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        // Lower pixel ratio on mobile for better performance
+        this.renderer.setPixelRatio(this.isMobile ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2));
+        
+        // Shadows are expensive - disable on mobile
+        this.renderer.shadowMap.enabled = !this.isMobile;
+        if (!this.isMobile) {
+            this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        }
+        
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.renderer.toneMappingExposure = 1.2;
-        this.renderer.physicallyCorrectLights = true;
+        // Physically correct lights are expensive - disable on mobile
+        this.renderer.physicallyCorrectLights = !this.isMobile;
         
         this.container.appendChild(this.renderer.domElement);
     }
     
     setupLighting() {
-        // Ambient light - soft fill
-        const ambientLight = new THREE.AmbientLight(0xFAF7F2, 0.4);
-        this.scene.add(ambientLight);
-        
-        // Main key light - warm white from top-right
-        const keyLight = new THREE.DirectionalLight(0xFFFFFF, 1.2);
-        keyLight.position.set(15, 25, 20);
-        keyLight.castShadow = true;
-        keyLight.shadow.mapSize.width = 2048;
-        keyLight.shadow.mapSize.height = 2048;
-        keyLight.shadow.camera.near = 0.5;
-        keyLight.shadow.camera.far = 100;
-        keyLight.shadow.camera.left = -30;
-        keyLight.shadow.camera.right = 30;
-        keyLight.shadow.camera.top = 30;
-        keyLight.shadow.camera.bottom = -30;
-        keyLight.shadow.bias = -0.0001;
-        keyLight.shadow.radius = 4;
-        this.scene.add(keyLight);
-        
-        // Fill light - cooler tone from left
-        const fillLight = new THREE.DirectionalLight(0xB4C7E7, 0.6);
-        fillLight.position.set(-20, 10, -10);
-        this.scene.add(fillLight);
-        
-        // Accent light - terracotta warmth from back
-        const accentLight = new THREE.DirectionalLight(0xC17F59, 0.5);
-        accentLight.position.set(-5, 15, -25);
-        this.scene.add(accentLight);
-        
-        // Rim light - subtle highlight from behind
-        const rimLight = new THREE.DirectionalLight(0xFFE4D6, 0.4);
-        rimLight.position.set(0, 5, -30);
-        this.scene.add(rimLight);
-        
-        // Ground bounce light
-        const bounceLight = new THREE.DirectionalLight(0xEDE8DE, 0.3);
-        bounceLight.position.set(0, -20, 10);
-        this.scene.add(bounceLight);
-        
-        // Hemisphere light for natural sky/ground gradient
-        const hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0xC17F59, 0.3);
-        hemiLight.position.set(0, 50, 0);
-        this.scene.add(hemiLight);
-        
-        // Subtle point lights for sparkle
-        const sparkleLight1 = new THREE.PointLight(0xFFFFFF, 0.3, 50);
-        sparkleLight1.position.set(10, 20, 15);
-        this.scene.add(sparkleLight1);
-        
-        const sparkleLight2 = new THREE.PointLight(0xC17F59, 0.2, 40);
-        sparkleLight2.position.set(-15, 10, 10);
-        this.scene.add(sparkleLight2);
+        if (this.isMobile) {
+            // Simplified lighting for mobile - fewer lights = better performance
+            // Ambient light - soft fill
+            const ambientLight = new THREE.AmbientLight(0xFAF7F2, 0.6);
+            this.scene.add(ambientLight);
+            
+            // Single main directional light
+            const keyLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+            keyLight.position.set(15, 25, 20);
+            keyLight.castShadow = false; // No shadows on mobile
+            this.scene.add(keyLight);
+            
+            // Hemisphere light for natural gradient
+            const hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0xC17F59, 0.4);
+            hemiLight.position.set(0, 50, 0);
+            this.scene.add(hemiLight);
+        } else {
+            // Full lighting setup for desktop
+            // Ambient light - soft fill
+            const ambientLight = new THREE.AmbientLight(0xFAF7F2, 0.4);
+            this.scene.add(ambientLight);
+            
+            // Main key light - warm white from top-right
+            const keyLight = new THREE.DirectionalLight(0xFFFFFF, 1.2);
+            keyLight.position.set(15, 25, 20);
+            keyLight.castShadow = true;
+            keyLight.shadow.mapSize.width = 2048;
+            keyLight.shadow.mapSize.height = 2048;
+            keyLight.shadow.camera.near = 0.5;
+            keyLight.shadow.camera.far = 100;
+            keyLight.shadow.camera.left = -30;
+            keyLight.shadow.camera.right = 30;
+            keyLight.shadow.camera.top = 30;
+            keyLight.shadow.camera.bottom = -30;
+            keyLight.shadow.bias = -0.0001;
+            keyLight.shadow.radius = 4;
+            this.scene.add(keyLight);
+            
+            // Fill light - cooler tone from left
+            const fillLight = new THREE.DirectionalLight(0xB4C7E7, 0.6);
+            fillLight.position.set(-20, 10, -10);
+            this.scene.add(fillLight);
+            
+            // Accent light - terracotta warmth from back
+            const accentLight = new THREE.DirectionalLight(0xC17F59, 0.5);
+            accentLight.position.set(-5, 15, -25);
+            this.scene.add(accentLight);
+            
+            // Rim light - subtle highlight from behind
+            const rimLight = new THREE.DirectionalLight(0xFFE4D6, 0.4);
+            rimLight.position.set(0, 5, -30);
+            this.scene.add(rimLight);
+            
+            // Ground bounce light
+            const bounceLight = new THREE.DirectionalLight(0xEDE8DE, 0.3);
+            bounceLight.position.set(0, -20, 10);
+            this.scene.add(bounceLight);
+            
+            // Hemisphere light for natural sky/ground gradient
+            const hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0xC17F59, 0.3);
+            hemiLight.position.set(0, 50, 0);
+            this.scene.add(hemiLight);
+            
+            // Subtle point lights for sparkle
+            const sparkleLight1 = new THREE.PointLight(0xFFFFFF, 0.3, 50);
+            sparkleLight1.position.set(10, 20, 15);
+            this.scene.add(sparkleLight1);
+            
+            const sparkleLight2 = new THREE.PointLight(0xC17F59, 0.2, 40);
+            sparkleLight2.position.set(-15, 10, 10);
+            this.scene.add(sparkleLight2);
+        }
     }
     
     setupControls() {
@@ -942,57 +973,66 @@ class EasyPills3DViewer {
     }
     
     createMaterial() {
-        // Premium material with subtle iridescence effect
-        const material = new THREE.MeshPhysicalMaterial({
-            color: 0xF5EDE6,
-            metalness: 0.15,
-            roughness: 0.35,
-            clearcoat: 0.3,
-            clearcoatRoughness: 0.4,
-            reflectivity: 0.5,
-            envMapIntensity: 0.8,
-            transparent: false,
-            side: THREE.DoubleSide
-        });
-        
-        return material;
+        // Use simpler materials on mobile for better performance
+        // MeshPhysicalMaterial is expensive, MeshStandardMaterial is much faster
+        if (this.isMobile) {
+            return new THREE.MeshStandardMaterial({
+                color: 0xF5EDE6,
+                metalness: 0.15,
+                roughness: 0.35,
+                side: THREE.DoubleSide
+            });
+        } else {
+            // Premium material with subtle iridescence effect for desktop
+            return new THREE.MeshPhysicalMaterial({
+                color: 0xF5EDE6,
+                metalness: 0.15,
+                roughness: 0.35,
+                clearcoat: 0.3,
+                clearcoatRoughness: 0.4,
+                reflectivity: 0.5,
+                envMapIntensity: 0.8,
+                transparent: false,
+                side: THREE.DoubleSide
+            });
+        }
     }
     
     createAccentMaterial() {
-        // Terracotta accent material for highlights
-        return new THREE.MeshPhysicalMaterial({
-            color: 0xC17F59,
-            metalness: 0.3,
-            roughness: 0.4,
-            clearcoat: 0.2,
-            clearcoatRoughness: 0.3,
-            envMapIntensity: 0.6
-        });
+        // Use simpler materials on mobile for better performance
+        if (this.isMobile) {
+            return new THREE.MeshStandardMaterial({
+                color: 0xC17F59,
+                metalness: 0.3,
+                roughness: 0.4
+            });
+        } else {
+            // Terracotta accent material for highlights on desktop
+            return new THREE.MeshPhysicalMaterial({
+                color: 0xC17F59,
+                metalness: 0.3,
+                roughness: 0.4,
+                clearcoat: 0.2,
+                clearcoatRoughness: 0.3,
+                envMapIntensity: 0.6
+            });
+        }
     }
     
     loadModel() {
-        const objLoader = new THREE.OBJLoader();
-        const mtlLoader = new THREE.MTLLoader();
-        
-        // Set paths for both loaders
-        const modelPath = './';
-        mtlLoader.setPath(modelPath);
-        objLoader.setPath(modelPath);
-        
-        // Try MTL first - the OBJ file references "3D_model.mtl"
-        mtlLoader.load(
-            '3D_model.mtl',
-            (materials) => {
-                // MTL loaded successfully
-                materials.preload();
-                objLoader.setMaterials(materials);
-                this.loadOBJ(objLoader);
+        const loader = new THREE.GLTFLoader();
+
+        loader.load(
+            './3D_model.glb',
+            (gltf) => {
+                this.onModelLoaded(gltf.scene);
             },
-            undefined,
+            (xhr) => {
+                this.onLoadProgress(xhr);
+            },
             (error) => {
-                // MTL not found, load OBJ with custom materials (this is expected)
-                console.log('MTL file not found, using custom materials instead');
-                this.loadOBJ(objLoader);
+                console.error('Failed to load GLB:', error);
+                this.onLoadError(error);
             }
         );
     }
@@ -1059,9 +1099,11 @@ class EasyPills3DViewer {
                     child.material = mainMaterial.clone();
                 }
                 
-                // Enable shadows
-                child.castShadow = true;
-                child.receiveShadow = true;
+                // Enable shadows only on desktop (expensive on mobile)
+                if (!this.isMobile) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
                 
                 // Compute normals for proper lighting
                 if (child.geometry) {
@@ -1105,15 +1147,18 @@ class EasyPills3DViewer {
     }
     
     addGroundPlane() {
-        const groundGeometry = new THREE.PlaneGeometry(100, 100);
-        const groundMaterial = new THREE.ShadowMaterial({
-            opacity: 0.15
-        });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2;
-        ground.position.y = -10;
-        ground.receiveShadow = true;
-        this.scene.add(ground);
+        // Only add ground plane for shadows on desktop (not needed on mobile)
+        if (!this.isMobile) {
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.ShadowMaterial({
+                opacity: 0.15
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -10;
+            ground.receiveShadow = true;
+            this.scene.add(ground);
+        }
     }
     
     onLoadProgress(xhr) {

@@ -1,0 +1,39 @@
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# API Keys and Secrets
+config.js
+config.local.js
+api-keys.js
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node Modules (if using npm)
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Build & Cache
+.vercel/
+.cache/
+*.log
+
+# Backup & Temp Files
+*.bak
+*.tmp
+
+# Images with sensitive metadata
+images/2D_structure_module.png

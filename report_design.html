@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EasyPills — App Design Overview</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,700&display=swap');
+
+:root {
+  --bg:      #EDE8E2;
+  --card:    #FFFFFF;
+  --dark:    #1E1A17;
+  --accent:  #C17A56;
+  --green:   #4A7A52;
+  --red:     #C0392B;
+  --blue:    #2E5A8A;
+  --text:    #1A1714;
+  --sub:     #9B9189;
+  --border:  #E4DDD5;
+  --soon-bg: #E8DDD3;
+  --soon-tx: #8B6347;
+  --good-bg: #DFF0E3;
+  --good-tx: #3A6B42;
+  --cx-bg:   #F0E8E0;
+  --bar-bg:  #DDD8D2;
+  --PW: 176px;
+  --PH: 368px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #F7F4EF;
+  color: var(--text);
+  padding: 52px 48px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 52px;
+  padding-bottom: 28px;
+  border-bottom: 1.5px solid var(--border);
+}
+.logo-box {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: var(--cx-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+}
+.page-header h1 { font-size: 32px; font-weight: 800; letter-spacing: -.5px; }
+.page-header h1 span { color: var(--accent); font-style: italic; }
+.page-header p { font-size: 13px; color: var(--sub); margin-top: 3px; }
+.header-badges { display: flex; gap: 8px; margin-left: auto; flex-shrink: 0; }
+.hbadge {
+  font-size: 11px; font-weight: 600; padding: 5px 12px;
+  border-radius: 999px; border: 1.5px solid var(--border);
+  color: var(--sub); background: var(--card);
+}
+
+/* ── SECTION BLOCK ── */
+.section { margin-bottom: 56px; }
+.sec-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 6px;
+}
+.sec-title { font-size: 20px; font-weight: 700; margin-bottom: 22px; }
+
+/* ── PHONES ROW ── */
+.phones-row {
+  display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;
+}
+
+/* ── PHONE SHELL ── */
+.phone-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.phone-shell {
+  width: var(--PW); height: var(--PH);
+  background: #1A1714;
+  border-radius: 34px;
+  padding: 11px 8px;
+  box-shadow:
+    0 0 0 1px #111,
+    0 24px 64px rgba(0,0,0,.22),
+    inset 0 1px 0 #444;
+  flex-shrink: 0;
+  position: relative;
+}
+/* punch-hole camera */
+.phone-shell::before {
+  content: '';
+  position: absolute;
+  top: 16px; left: 50%; transform: translateX(-50%);
+  width: 9px; height: 9px;
+  background: #111;
+  border-radius: 999px;
+  z-index: 10;
+}
+.screen {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  border-radius: 26px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  font-size: 7px;
+  position: relative;
+}
+
+/* status bar */
+.sbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 12px 2px;
+  font-size: 5.5px; font-weight: 600; color: var(--sub);
+  flex-shrink: 0;
+}
+
+/* scrollable content area */
+.scontent { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+/* phone label */
+.phone-label { font-size: 12px; font-weight: 600; color: var(--text); text-align: center; }
+.phone-sub   { font-size: 10px; color: var(--sub); text-align: center; margin-top: -6px; }
+
+/* ── WHITE CARD ── */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+/* ── BOTTOM NAV ── */
+.bnav {
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 6px 0 5px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.bni { display: flex; flex-direction: column; align-items: center; gap: 1.5px; }
+.bni-icon { font-size: 11px; line-height: 1; }
+.bni-lbl  { font-size: 5px; font-weight: 500; color: var(--sub); }
+.bni.active .bni-lbl { color: var(--accent); font-weight: 700; }
+.bni.active .bni-icon { filter: none; }
+.bni-dot { width: 3px; height: 3px; border-radius: 999px; background: var(--accent); margin-top: 1px; }
+
+/* ── AUTH SCREENS ── */
+.auth-bg { background: var(--bg); flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: 18px; }
+.auth-icon-wrap {
+  width: 44px; height: 44px; border-radius: 13px;
+  background: var(--cx-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 8px;
+}
+.auth-app-name { font-size: 16px; font-weight: 800; letter-spacing: -.3px; }
+.auth-app-name span { color: var(--accent); font-style: italic; }
+.auth-tagline { font-size: 6.5px; color: var(--sub); margin-top: 1px; }
+.auth-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 16px 14px;
+  margin: 14px 10px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+}
+.auth-h1  { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.auth-h2  { font-size: 6.5px; color: var(--sub); margin-bottom: 10px; }
+.field-lbl {
+  font-size: 5.5px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--sub); margin-bottom: 3px;
+}
+.field-row { display: flex; gap: 4px; margin-bottom: 7px; }
+.field-input {
+  flex: 1; background: #F5F1ED; border-radius: 10px;
+  padding: 6px 8px; font-size: 7px; color: var(--sub);
+  border: 1px solid transparent;
+}
+.field-eye {
+  width: 28px; height: 28px; background: #F5F1ED;
+  border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; font-size: 10px; flex-shrink: 0;
+}
+.auth-btn {
+  width: 100%; background: var(--accent); border-radius: 12px;
+  padding: 8px; text-align: center;
+  font-size: 8px; font-weight: 700; color: #fff;
+  margin-top: 6px;
+}
+.auth-links {
+  display: flex; justify-content: space-between;
+  margin-top: 8px; font-size: 6px; color: var(--accent); font-weight: 500;
+}
+.auth-links.centered { justify-content: center; color: var(--sub); }
+.auth-links.centered span { color: var(--accent); }
+.actype-row { display: flex; gap: 5px; margin-bottom: 7px; }
+.actype-btn {
+  flex: 1; border-radius: 10px; padding: 6px 4px;
+  text-align: center; font-size: 6.5px; font-weight: 600;
+  border: 1.5px solid var(--border); color: var(--sub);
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+}
+.actype-btn.sel {
+  border-color: var(--accent); color: var(--accent);
+  background: #F8EEE8;
+}
+
+/* ── HOME SCREEN ── */
+.home-greeting { padding: 10px 12px 6px; flex-shrink: 0; }
+.greet-small { font-size: 7px; color: var(--sub); }
+.greet-big   { font-size: 16px; font-weight: 700; margin-top: 1px; }
+.online-dot  {
+  position: absolute; top: 22px; right: 14px;
+  width: 8px; height: 8px; border-radius: 999px; background: var(--red);
+}
+
+.hero-dark {
+  margin: 0 10px 8px; border-radius: 18px;
+  background: var(--dark);
+  padding: 12px 14px;
+  flex-shrink: 0;
+}
+.hero-next-label { font-size: 5.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #7A7067; margin-bottom: 3px; }
+.hero-drug  { font-size: 16px; font-weight: 700; color: #FAF7F2; }
+.hero-info  { font-size: 6.5px; color: #7A7067; margin-top: 1px; }
+.hero-time-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.hero-time  { font-size: 17px; font-weight: 700; color: var(--accent); }
+.hero-countdown { font-size: 6px; color: #7A7067; margin-top: 1px; }
+.hero-dispense-btn {
+  background: var(--accent); border-radius: 999px;
+  padding: 5px 12px; font-size: 6.5px; font-weight: 700; color: #fff;
+}
+
+.stats-row { display: flex; gap: 5px; margin: 0 10px 8px; flex-shrink: 0; }
+.stat-box {
+  flex: 1; background: var(--card); border-radius: 12px;
+  padding: 7px 5px; text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.stat-val { font-size: 11px; font-weight: 700; }
+.stat-lbl { font-size: 4.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--sub); margin-top: 2px; line-height: 1.2; }
+.stat-val.green { color: var(--green); }
+.stat-val.blue  { color: var(--blue); }
+.stat-val.red   { color: var(--red); }
+
+.today-card { background: var(--card); margin: 0 10px 8px; border-radius: 14px; overflow: hidden; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.today-hdr  { padding: 8px 10px 6px; font-size: 8.5px; font-weight: 700; }
+.dose-row   { display: flex; align-items: center; gap: 7px; padding: 6px 10px; border-top: 1px solid #F0EBE3; }
+.dose-dot   { width: 6px; height: 6px; border-radius: 999px; background: var(--accent); flex-shrink: 0; }
+.dose-info  { flex: 1; }
+.dose-drug  { font-size: 8px; font-weight: 600; }
+.dose-sub   { font-size: 5.5px; color: var(--sub); margin-top: .5px; }
+.dose-time  { font-size: 7px; font-weight: 600; color: var(--accent); }
+.soon-badge {
+  background: var(--soon-bg); color: var(--soon-tx);
+  font-size: 5px; font-weight: 600; padding: 2px 5px;
+  border-radius: 999px; margin-left: 4px; white-space: nowrap;
+}
+.taken-badge {
+  background: var(--good-bg); color: var(--good-tx);
+  font-size: 5px; font-weight: 600; padding: 2px 5px;
+  border-radius: 999px; margin-left: 4px;
+}
+.missed-badge-sm {
+  background: #FCEAEA; color: var(--red);
+  font-size: 5px; font-weight: 600; padding: 2px 5px;
+  border-radius: 999px; margin-left: 4px;
+}
+
+.section-lbl-sm {
+  font-size: 5.5px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--sub);
+  padding: 5px 10px 4px; flex-shrink: 0;
+}
+.recent-card { background: var(--card); margin: 0 10px 6px; border-radius: 14px; padding: 8px 10px; font-size: 7.5px; font-weight: 600; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+
+/* ── INVENTORY ── */
+.inv-title { font-size: 18px; font-weight: 700; }
+.inv-sub   { font-size: 6.5px; color: var(--sub); margin-top: 1px; }
+.inv-header { padding: 10px 12px 6px; flex-shrink: 0; }
+.comp-card  { background: var(--card); margin: 0 10px 6px; border-radius: 14px; overflow: hidden; flex: 1; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.comp-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 10px; border-bottom: 1px solid #F0EBE3;
+}
+.cx-badge {
+  width: 24px; height: 24px; border-radius: 8px;
+  background: var(--cx-bg); color: var(--accent);
+  font-size: 6.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.cx-badge.empty { background: #F0EDEA; color: #C5BDB6; }
+.comp-info { flex: 1; }
+.comp-drug { font-size: 8px; font-weight: 700; }
+.comp-meta { font-size: 5.5px; color: var(--sub); margin-top: 1px; }
+.comp-bar-wrap { height: 3.5px; background: var(--bar-bg); border-radius: 999px; margin-top: 5px; }
+.comp-bar      { height: 100%; border-radius: 999px; background: var(--green); }
+.comp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.comp-count     { font-size: 13px; font-weight: 700; line-height: 1; }
+.comp-count-lbl { font-size: 5px; color: var(--sub); }
+.good-badge {
+  background: var(--good-bg); color: var(--good-tx);
+  font-size: 5px; font-weight: 700; padding: 2px 5px; border-radius: 999px;
+}
+.low-badge {
+  background: #FEE8E8; color: var(--red);
+  font-size: 5px; font-weight: 700; padding: 2px 5px; border-radius: 999px;
+}
+.comp-empty {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 10px; border-bottom: 1px solid #F0EBE3;
+}
+.comp-empty-text { flex: 1; font-size: 7px; color: #C5BDB6; }
+.comp-plus { font-size: 12px; color: var(--accent); }
+
+/* ── ACCESS CONTROL ── */
+.access-header { padding: 10px 12px 8px; flex-shrink: 0; }
+.access-title  { font-size: 18px; font-weight: 700; }
+.fp-card {
+  margin: 0 10px 8px; border-radius: 18px;
+  background: var(--dark); padding: 16px 12px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; flex-shrink: 0;
+}
+.fp-ring {
+  width: 42px; height: 42px; border-radius: 999px;
+  border: 2px solid #5A4A3A;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 6px;
+}
+.fp-icon    { font-size: 22px; }
+.fp-title   { font-size: 9px; font-weight: 700; color: #FAF7F2; }
+.fp-sub     { font-size: 6px; color: #7A7067; text-align: center; }
+.enrolled-hdr {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 12px; flex-shrink: 0;
+}
+.enrolled-lbl  { font-size: 5.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--sub); }
+.enroll-btn    { font-size: 6.5px; font-weight: 700; color: var(--accent); }
+.fp-user-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.fp-avatar {
+  width: 22px; height: 22px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 6.5px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.fp-name-info { flex: 1; }
+.fp-uname { font-size: 7.5px; font-weight: 600; }
+.fp-ulast { font-size: 5.5px; color: var(--sub); }
+.role-owner    { background: #E8EFF7; color: var(--blue); font-size: 5px; font-weight: 700; padding: 2px 5px; border-radius: 999px; }
+.role-family   { background: var(--good-bg); color: var(--good-tx); font-size: 5px; font-weight: 700; padding: 2px 5px; border-radius: 999px; }
+.role-caregiver{ background: #FFF5E0; color: #B07820; font-size: 5px; font-weight: 700; padding: 2px 5px; border-radius: 999px; }
+.log-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.log-icon-success { font-size: 9px; }
+.log-name  { font-size: 7px; font-weight: 600; }
+.log-sub   { font-size: 5.5px; color: var(--sub); }
+.log-time  { font-size: 5.5px; color: var(--sub); margin-left: auto; }
+
+/* ── SCHEDULE SCREEN ── */
+.sch-header { padding: 10px 12px 6px; flex-shrink: 0; }
+.sch-title  { font-size: 18px; font-weight: 700; }
+.sch-sub    { font-size: 6.5px; color: var(--sub); margin-top: 1px; }
+.sch-card   { background: var(--card); margin: 0 10px 6px; border-radius: 14px; overflow: hidden; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.sch-group-hdr { padding: 6px 10px 2px; font-size: 5.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--sub); border-bottom: 1px solid #F0EBE3; }
+.sch-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 10px; border-bottom: 1px solid #F0EBE3;
+}
+.sch-dot   { width: 7px; height: 7px; border-radius: 999px; background: var(--accent); flex-shrink: 0; }
+.sch-info  { flex: 1; }
+.sch-drug  { font-size: 8px; font-weight: 600; }
+.sch-meta  { font-size: 5.5px; color: var(--sub); margin-top: .5px; }
+.sch-time  { font-size: 7px; font-weight: 600; color: var(--accent); }
+.toggle-on {
+  width: 22px; height: 12px; border-radius: 999px; background: var(--accent);
+  position: relative; flex-shrink: 0;
+}
+.toggle-on::after {
+  content: ''; position: absolute; right: 1.5px; top: 1.5px;
+  width: 9px; height: 9px; border-radius: 999px; background: #fff;
+}
+.toggle-off {
+  width: 22px; height: 12px; border-radius: 999px; background: var(--bar-bg);
+  position: relative; flex-shrink: 0;
+}
+.toggle-off::after {
+  content: ''; position: absolute; left: 1.5px; top: 1.5px;
+  width: 9px; height: 9px; border-radius: 999px; background: #fff;
+}
+.fab-btn {
+  position: absolute; bottom: 56px; right: 10px;
+  background: var(--accent); border-radius: 999px;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #fff; font-weight: 300;
+  box-shadow: 0 3px 10px rgba(193,122,86,.4);
+}
+
+/* ── PROFILE SCREEN ── */
+.prof-header { padding: 10px 12px 6px; flex-shrink: 0; }
+.prof-title  { font-size: 18px; font-weight: 700; }
+.prof-user-card {
+  background: var(--card); margin: 4px 10px 6px; border-radius: 14px;
+  padding: 12px 10px; display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.prof-avatar {
+  width: 36px; height: 36px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.prof-name  { font-size: 11px; font-weight: 700; }
+.prof-email { font-size: 6px; color: var(--sub); margin-top: 1px; }
+.prof-role  { font-size: 5.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-top: 3px; display: inline-block; }
+.prof-role.patient { background: var(--good-bg); color: var(--good-tx); }
+.prof-role.doctor  { background: #E8EFF7; color: var(--blue); }
+.prof-settings-card {
+  background: var(--card); margin: 0 10px 6px; border-radius: 14px;
+  overflow: hidden; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.prof-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 10px; border-bottom: 1px solid #F0EBE3;
+}
+.prof-row-lbl  { font-size: 7.5px; font-weight: 500; }
+.prof-row-sub  { font-size: 6px; color: var(--sub); margin-top: .5px; }
+.prof-copy-id {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 10px; border-bottom: 1px solid #F0EBE3;
+}
+.copy-id-val { font-size: 6.5px; color: var(--sub); font-weight: 500; }
+.copy-btn    { font-size: 6px; color: var(--accent); font-weight: 700; }
+.signout-btn {
+  margin: 4px 10px; background: #FEE8E8; border-radius: 12px;
+  padding: 7px; text-align: center;
+  font-size: 7.5px; font-weight: 700; color: var(--red); flex-shrink: 0;
+}
+
+/* ── DOCTOR SCREENS ── */
+.dr-stat-card {
+  background: var(--card); border-radius: 12px;
+  padding: 8px 6px; text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  flex: 1;
+}
+.dr-stat-val { font-size: 13px; font-weight: 700; }
+.dr-stat-lbl { font-size: 4.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--sub); margin-top: 2px; }
+.pt-group-hdr {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; flex-shrink: 0;
+}
+.pt-group-icon { font-size: 8px; }
+.pt-group-lbl  { font-size: 5.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--sub); }
+.pt-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.pt-avatar {
+  width: 24px; height: 24px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.pt-name   { font-size: 8px; font-weight: 600; }
+.pt-sub    { font-size: 5.5px; color: var(--sub); margin-top: .5px; }
+.pt-count  { font-size: 8px; font-weight: 700; color: var(--green); }
+.missed-pill {
+  background: #FCEAEA; color: var(--red);
+  font-size: 5px; font-weight: 700; padding: 2px 5px; border-radius: 999px;
+}
+
+/* doctor patients screen */
+.adh-row {
+  display: flex; gap: 5px; padding: 4px 12px; flex-shrink: 0;
+}
+.adh-day { display: flex; flex-direction: column; align-items: center; gap: 1.5px; }
+.adh-dot-c {
+  width: 16px; height: 16px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 5px; font-weight: 700; color: #fff;
+}
+.adh-dot-c.g { background: var(--green); }
+.adh-dot-c.r { background: var(--red); }
+.adh-dot-c.a { background: #B07820; }
+.adh-day-lbl { font-size: 4.5px; color: var(--sub); }
+.chips-row {
+  display: flex; gap: 6px; padding: 0 10px 6px; overflow: hidden; flex-shrink: 0;
+}
+.pt-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0;
+}
+.pt-chip-av {
+  width: 28px; height: 28px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 700; color: #fff;
+}
+.pt-chip-av.sel { outline: 2px solid var(--accent); outline-offset: 1px; }
+.pt-chip-name { font-size: 5.5px; font-weight: 600; }
+.pt-chip-pct  { font-size: 5px; font-weight: 700; }
+
+/* ── FLOW DIAGRAM ── */
+.flow-wrap {
+  background: var(--card); border-radius: 20px; padding: 28px 24px;
+  border: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 0; overflow-x: auto;
+}
+.flow-col  { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 120px; }
+.flow-hdr  {
+  font-size: 9px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--sub);
+  padding: 3px 10px; background: #F0EBE5; border-radius: 999px;
+  margin-bottom: 4px; white-space: nowrap;
+}
+.fnode {
+  background: #F5F1ED; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 7px 12px;
+  font-size: 11px; font-weight: 500; text-align: center;
+  white-space: nowrap; width: 100%;
+}
+.fnode.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+.fnode.green  { background: #EBF5EC; border-color: #4A7A52; color: #4A7A52; }
+.fnode.blue   { background: #E8EFF7; border-color: #2E5A8A; color: #2E5A8A; }
+.fnode.amber  { background: #FFF5E0; border-color: #B07820; color: #B07820; }
+.farrow { display: flex; align-items: center; justify-content: center; min-width: 28px; padding-top: 44px; font-size: 16px; color: #C5BDB6; }
+
+/* ── FEATURE GRID ── */
+.feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.feat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 18px;
+}
+.feat-icon  { font-size: 22px; margin-bottom: 8px; }
+.feat-title { font-size: 13px; font-weight: 700; margin-bottom: 7px; }
+.feat-card ul { list-style: none; }
+.feat-card ul li {
+  font-size: 11px; color: var(--sub); padding: 2.5px 0;
+  display: flex; gap: 6px; align-items: flex-start;
+}
+.feat-card ul li::before { content: '–'; color: var(--accent); flex-shrink: 0; }
+
+/* ── TECH CHIPS ── */
+.tech-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tech-chip {
+  font-size: 11px; font-weight: 600; padding: 5px 13px;
+  border-radius: 999px; background: var(--card); border: 1px solid var(--border);
+  color: var(--sub);
+}
+.tech-chip.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center; font-size: 11px; color: var(--sub);
+  padding-top: 20px; border-top: 1.5px solid var(--border); margin-top: 20px;
+}
+
+.spacer { flex: 1; }
+hr.div { border: none; border-top: 1.5px solid var(--border); margin: 48px 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <div class="logo-box">💊</div>
+  <div>
+    <h1>Easy<span>Pills</span></h1>
+    <p>Smart Medication Management — Senior Design 2026 · Ilia State University</p>
+  </div>
+  <div class="header-badges">
+    <div class="hbadge">React Native · Expo</div>
+    <div class="hbadge">Firebase</div>
+    <div class="hbadge">v1.0.0</div>
+  </div>
+</div>
+
+
+<!-- ═══ NAVIGATION FLOW ═══ -->
+<div class="section">
+  <div class="sec-label">System Architecture</div>
+  <div class="sec-title">Navigation & Role Flow</div>
+  <div class="flow-wrap">
+    <div class="flow-col">
+      <div class="flow-hdr">Launch</div>
+      <div class="fnode accent">App Start</div>
+      <div class="fnode" style="font-size:10px;">Auth Gate<br><span style="opacity:.6;font-size:9px;">Firebase check</span></div>
+    </div>
+    <div class="farrow">→</div>
+    <div class="flow-col">
+      <div class="flow-hdr">Auth</div>
+      <div class="fnode">Login</div>
+      <div class="fnode">Register</div>
+      <div class="fnode">Forgot Password</div>
+    </div>
+    <div class="farrow">→</div>
+    <div class="flow-col">
+      <div class="flow-hdr">Role</div>
+      <div class="fnode green">Patient</div>
+      <div style="height:28px;"></div>
+      <div class="fnode blue">Doctor</div>
+    </div>
+    <div class="farrow">→</div>
+    <div class="flow-col">
+      <div class="flow-hdr">Setup</div>
+      <div class="fnode amber">Device Setup<br><span style="font-size:9px;opacity:.7;">(if no device)</span></div>
+      <div style="height:28px;"></div>
+      <div class="fnode" style="font-size:10px;color:#bbb;">— skipped —</div>
+    </div>
+    <div class="farrow">→</div>
+    <div class="flow-col">
+      <div class="flow-hdr">Patient Tabs (5)</div>
+      <div class="fnode green">🏠 Home</div>
+      <div class="fnode green">📦 Inventory</div>
+      <div class="fnode green">📅 Schedule</div>
+      <div class="fnode green">🔒 Access</div>
+      <div class="fnode green">👤 Profile</div>
+    </div>
+    <div class="farrow" style="padding-top:120px;">·</div>
+    <div class="flow-col" style="margin-top:104px;">
+      <div class="flow-hdr">Doctor Tabs (4)</div>
+      <div class="fnode blue">🏠 Dashboard</div>
+      <div class="fnode blue">👥 Patients</div>
+      <div class="fnode blue">📅 Schedule</div>
+      <div class="fnode blue">👤 Profile</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ AUTH SCREENS ═══ -->
+<div class="section">
+  <div class="sec-label">Authentication</div>
+  <div class="sec-title">Auth Screens — Both Roles</div>
+  <div class="phones-row">
+
+    <!-- LOGIN -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:15</span><span>▲ ☰ 🔋</span></div>
+          <div class="auth-bg">
+            <div class="auth-icon-wrap">💊</div>
+            <div class="auth-app-name">Easy<span>Pills</span></div>
+            <div class="auth-tagline">Smart Medication Management</div>
+            <div class="auth-card" style="width:calc(100% - 16px);">
+              <div class="auth-h1">Welcome back</div>
+              <div class="auth-h2">Sign in to your account</div>
+              <div class="field-lbl">Email Address</div>
+              <div class="field-row"><div class="field-input">yousef@example.com</div></div>
+              <div class="field-lbl">Password</div>
+              <div class="field-row">
+                <div class="field-input">••••••••</div>
+                <div class="field-eye">👁</div>
+              </div>
+              <div class="auth-btn">Sign In</div>
+              <div class="auth-links">
+                <span>Forgot password?</span>
+                <span>Create account</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Login</div>
+      <div class="phone-sub">Email + password sign-in</div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:15</span><span>▲ ☰ 🔋</span></div>
+          <div class="auth-bg" style="padding-top:10px;">
+            <div class="auth-icon-wrap">💊</div>
+            <div class="auth-app-name">Easy<span>Pills</span></div>
+            <div class="auth-tagline">Create your account</div>
+            <div class="auth-card" style="width:calc(100% - 16px);margin-top:10px;">
+              <div class="auth-h1">Sign up</div>
+              <div class="auth-h2">Join EasyPills today</div>
+              <div class="field-lbl">Full Name</div>
+              <div class="field-row"><div class="field-input">Enter your full name</div></div>
+              <div class="field-lbl">Email Address</div>
+              <div class="field-row"><div class="field-input">your@email.com</div></div>
+              <div class="field-lbl">Password</div>
+              <div class="field-row">
+                <div class="field-input">Create password</div>
+                <div class="field-eye">👁</div>
+              </div>
+              <div class="field-lbl">Confirm Password</div>
+              <div class="field-row">
+                <div class="field-input">Confirm password</div>
+                <div class="field-eye">👁</div>
+              </div>
+              <div class="field-lbl">Account Type</div>
+              <div class="actype-row">
+                <div class="actype-btn sel">👤 Patient</div>
+                <div class="actype-btn">🩺 Doctor</div>
+              </div>
+              <div class="auth-btn">Create Account</div>
+              <div class="auth-links centered" style="margin-top:6px;">
+                Already have an account? <span style="margin-left:3px;">Sign in</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Register</div>
+      <div class="phone-sub">New account · role selection</div>
+    </div>
+
+    <!-- DEVICE SETUP -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent" style="padding-top:4px;">
+            <div style="padding:10px 12px 6px;flex-shrink:0;">
+              <div style="font-size:18px;font-weight:700;">Device Setup</div>
+              <div style="font-size:6.5px;color:var(--sub);margin-top:1px;">Link your EasyPills dispenser</div>
+            </div>
+            <!-- progress bar -->
+            <div style="margin:0 12px 10px;height:4px;background:var(--bar-bg);border-radius:999px;flex-shrink:0;">
+              <div style="width:60%;height:100%;background:var(--accent);border-radius:999px;"></div>
+            </div>
+            <!-- steps -->
+            <div style="background:var(--card);margin:0 10px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #F0EBE3;">
+                <div style="width:16px;height:16px;border-radius:999px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;flex-shrink:0;">✓</div>
+                <div style="font-size:7.5px;font-weight:500;">Read instructions</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #F0EBE3;">
+                <div style="width:16px;height:16px;border-radius:999px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;flex-shrink:0;">✓</div>
+                <div style="font-size:7.5px;font-weight:500;">Scan for device</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #F0EBE3;">
+                <div style="width:16px;height:16px;border-radius:999px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;flex-shrink:0;">3</div>
+                <div style="font-size:7.5px;font-weight:700;color:var(--accent);">Select your device</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #F0EBE3;">
+                <div style="width:16px;height:16px;border-radius:999px;background:var(--bar-bg);display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--sub);flex-shrink:0;">4</div>
+                <div style="font-size:7.5px;color:var(--sub);">Enter WiFi credentials</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;">
+                <div style="width:16px;height:16px;border-radius:999px;background:var(--bar-bg);display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--sub);flex-shrink:0;">5</div>
+                <div style="font-size:7.5px;color:var(--sub);">Confirm connection</div>
+              </div>
+            </div>
+            <div style="background:var(--card);margin:8px 10px;border-radius:12px;padding:8px 10px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+              <div style="font-size:5.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Found Devices</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;">
+                <span style="font-size:7.5px;font-weight:600;">EasyPills-4A2B</span>
+                <span style="font-size:6px;color:var(--green);font-weight:600;">●●●● Strong</span>
+              </div>
+            </div>
+            <div style="margin:0 10px;" class="auth-btn">Select Device</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Device Setup</div>
+      <div class="phone-sub">5-step WiFi pairing wizard</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ PATIENT SCREENS ═══ -->
+<div class="section">
+  <div class="sec-label">Patient App</div>
+  <div class="sec-title">Patient Screens — 5 Tabs</div>
+  <div class="phones-row">
+
+    <!-- HOME -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div class="home-greeting" style="position:relative;">
+              <div class="greet-small">Good morning,</div>
+              <div class="greet-big">Yousef</div>
+              <div class="online-dot"></div>
+            </div>
+            <div class="hero-dark">
+              <div class="hero-next-label">Next Dose</div>
+              <div class="hero-drug">Metformin</div>
+              <div class="hero-info">500mg · C1</div>
+              <div class="hero-time-row">
+                <div>
+                  <div class="hero-time">4:00 PM</div>
+                  <div class="hero-countdown">in 14h 43m</div>
+                </div>
+                <div class="hero-dispense-btn">Dispense</div>
+              </div>
+            </div>
+            <div class="stats-row">
+              <div class="stat-box"><div class="stat-val green">0/3</div><div class="stat-lbl">Taken<br>Today</div></div>
+              <div class="stat-box"><div class="stat-val blue">--%</div><div class="stat-lbl">Device<br>Battery</div></div>
+              <div class="stat-box"><div class="stat-val red" style="font-size:8px;">Offline</div><div class="stat-lbl">Status<br>Device</div></div>
+              <div class="stat-box"><div class="stat-val">—</div><div class="stat-lbl">Days<br>Streak</div></div>
+            </div>
+            <div class="today-card">
+              <div class="today-hdr">Today's Schedule</div>
+              <div class="dose-row">
+                <div class="dose-dot"></div>
+                <div class="dose-info">
+                  <div class="dose-drug">Metformin</div>
+                  <div class="dose-sub">500mg · C1</div>
+                </div>
+                <div class="dose-time">4:00 PM</div>
+                <div class="soon-badge">→ Soon</div>
+              </div>
+              <div class="dose-row">
+                <div class="dose-dot"></div>
+                <div class="dose-info">
+                  <div class="dose-drug">Metformin</div>
+                  <div class="dose-sub">500mg · C1</div>
+                </div>
+                <div class="dose-time">8:00 PM</div>
+                <div class="soon-badge">→ Soon</div>
+              </div>
+              <div class="dose-row">
+                <div class="dose-dot"></div>
+                <div class="dose-info">
+                  <div class="dose-drug">Loratadine</div>
+                  <div class="dose-sub">100mg · C2</div>
+                </div>
+                <div class="dose-time">10:00 PM</div>
+                <div class="soon-badge">→ Soon</div>
+              </div>
+            </div>
+            <div class="recent-card">Recent Activity</div>
+          </div>
+          <div class="bnav">
+            <div class="bni active"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div><div class="bni-dot"></div></div>
+            <div class="bni"><div class="bni-icon">🗂</div><div class="bni-lbl">inventory</div></div>
+            <div class="bni"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div></div>
+            <div class="bni"><div class="bni-icon">🔒</div><div class="bni-lbl">access</div></div>
+            <div class="bni"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Home</div>
+      <div class="phone-sub">Dashboard · next dose · stats</div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div class="inv-header">
+              <div class="inv-title">Inventory</div>
+              <div class="inv-sub">6 compartments · 3 active</div>
+            </div>
+            <div class="stats-row">
+              <div class="stat-box"><div class="stat-val green">3</div><div class="stat-lbl">Slots<br>In Stock</div></div>
+              <div class="stat-box"><div class="stat-val">0</div><div class="stat-lbl">Refill<br>Low Stock</div></div>
+              <div class="stat-box"><div class="stat-val">0</div><div class="stat-lbl">&lt;60 Days<br>Expiring</div></div>
+            </div>
+            <div class="section-lbl-sm">Compartments</div>
+            <div class="comp-card">
+              <div class="comp-row">
+                <div class="cx-badge">C1</div>
+                <div class="comp-info">
+                  <div class="comp-drug">Metformin</div>
+                  <div class="comp-meta">500mg · expires 2026-08</div>
+                  <div class="comp-bar-wrap"><div class="comp-bar" style="width:60%;"></div></div>
+                </div>
+                <div class="comp-right">
+                  <div class="comp-count">30</div>
+                  <div class="comp-count-lbl">left</div>
+                  <div class="good-badge">Good</div>
+                </div>
+              </div>
+              <div class="comp-row">
+                <div class="cx-badge">C2</div>
+                <div class="comp-info">
+                  <div class="comp-drug">Loratadine</div>
+                  <div class="comp-meta">100mg · expires 2027-08</div>
+                  <div class="comp-bar-wrap"><div class="comp-bar" style="width:60%;"></div></div>
+                </div>
+                <div class="comp-right">
+                  <div class="comp-count">30</div>
+                  <div class="comp-count-lbl">left</div>
+                  <div class="good-badge">Good</div>
+                </div>
+              </div>
+              <div class="comp-row">
+                <div class="cx-badge">C3</div>
+                <div class="comp-info">
+                  <div class="comp-drug">Valsartan</div>
+                  <div class="comp-meta">160mg · expires 2028-10</div>
+                  <div class="comp-bar-wrap"><div class="comp-bar" style="width:60%;"></div></div>
+                </div>
+                <div class="comp-right">
+                  <div class="comp-count">30</div>
+                  <div class="comp-count-lbl">left</div>
+                  <div class="good-badge">Good</div>
+                </div>
+              </div>
+              <div class="comp-empty">
+                <div class="cx-badge empty">C4</div>
+                <div class="comp-empty-text">Empty — tap to add medication</div>
+                <div class="comp-plus">+</div>
+              </div>
+              <div class="comp-empty">
+                <div class="cx-badge empty">C5</div>
+                <div class="comp-empty-text">Empty — tap to add medication</div>
+                <div class="comp-plus">+</div>
+              </div>
+              <div class="comp-empty" style="border-bottom:none;">
+                <div class="cx-badge empty">C6</div>
+                <div class="comp-empty-text">Empty — tap to add medication</div>
+                <div class="comp-plus">+</div>
+              </div>
+            </div>
+          </div>
+          <div class="bnav">
+            <div class="bni"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div></div>
+            <div class="bni active"><div class="bni-icon">🗂</div><div class="bni-lbl">inventory</div><div class="bni-dot"></div></div>
+            <div class="bni"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div></div>
+            <div class="bni"><div class="bni-icon">🔒</div><div class="bni-lbl">access</div></div>
+            <div class="bni"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Inventory</div>
+      <div class="phone-sub">6 compartments · stock levels</div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen" style="position:relative;">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div class="sch-header">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div class="sch-title">Schedule</div>
+                  <div class="sch-sub">3 active medications</div>
+                </div>
+              </div>
+            </div>
+            <div class="sch-card">
+              <div class="sch-group-hdr">🌅 Morning</div>
+              <div class="sch-row">
+                <div class="sch-dot"></div>
+                <div class="sch-info">
+                  <div class="sch-drug">Metformin</div>
+                  <div class="sch-meta">500mg · C1</div>
+                </div>
+                <div class="sch-time">8:00 AM</div>
+                <div class="toggle-on" style="margin-left:5px;"></div>
+              </div>
+              <div class="sch-group-hdr">☀️ Afternoon</div>
+              <div class="sch-row">
+                <div class="sch-dot" style="background:var(--blue);"></div>
+                <div class="sch-info">
+                  <div class="sch-drug">Metformin</div>
+                  <div class="sch-meta">500mg · C1</div>
+                </div>
+                <div class="sch-time">4:00 PM</div>
+                <div class="toggle-on" style="margin-left:5px;"></div>
+              </div>
+              <div class="sch-group-hdr">🌙 Evening</div>
+              <div class="sch-row" style="border-bottom:none;">
+                <div class="sch-dot" style="background:var(--green);"></div>
+                <div class="sch-info">
+                  <div class="sch-drug">Loratadine</div>
+                  <div class="sch-meta">100mg · C2</div>
+                </div>
+                <div class="sch-time">10:00 PM</div>
+                <div class="toggle-on" style="margin-left:5px;"></div>
+              </div>
+            </div>
+            <div style="padding:6px 10px;flex-shrink:0;">
+              <div style="background:var(--card);border-radius:14px;padding:10px;font-size:7px;color:var(--sub);text-align:center;border:1.5px dashed var(--border);">
+                Long-press a dose to delete · Tap to edit
+              </div>
+            </div>
+          </div>
+          <div class="fab-btn">+</div>
+          <div class="bnav">
+            <div class="bni"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div></div>
+            <div class="bni"><div class="bni-icon">🗂</div><div class="bni-lbl">inventory</div></div>
+            <div class="bni active"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div><div class="bni-dot"></div></div>
+            <div class="bni"><div class="bni-icon">🔒</div><div class="bni-lbl">access</div></div>
+            <div class="bni"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Schedule</div>
+      <div class="phone-sub">Dose times · toggle on/off</div>
+    </div>
+
+    <!-- ACCESS CONTROL -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div class="access-header">
+              <div class="access-title">Access Control</div>
+            </div>
+            <div class="fp-card">
+              <div class="fp-ring">
+                <div class="fp-icon">🫆</div>
+              </div>
+              <div class="fp-title">Biometric Sensor Active</div>
+              <div class="fp-sub">Place finger on device to authenticate</div>
+            </div>
+            <div class="enrolled-hdr">
+              <div class="enrolled-lbl">Enrolled Users</div>
+              <div class="enroll-btn">+ Enroll</div>
+            </div>
+            <div style="border-bottom:1px solid var(--border);margin:0 12px;flex-shrink:0;"></div>
+            <div class="fp-user-row">
+              <div class="fp-avatar" style="background:#4A7A52;">YA</div>
+              <div class="fp-name-info">
+                <div class="fp-uname">Yousef</div>
+                <div class="fp-ulast">Last: Today, 8:02 AM</div>
+              </div>
+              <div class="role-owner">Owner</div>
+            </div>
+            <div class="fp-user-row">
+              <div class="fp-avatar" style="background:#B07820;">MD</div>
+              <div class="fp-name-info">
+                <div class="fp-uname">Mom</div>
+                <div class="fp-ulast">Last: Yesterday</div>
+              </div>
+              <div class="role-family">Family</div>
+            </div>
+            <div class="enrolled-hdr" style="margin-top:4px;">
+              <div class="enrolled-lbl">Recent Access Log</div>
+            </div>
+            <div style="border-bottom:1px solid var(--border);margin:0 12px;flex-shrink:0;"></div>
+            <div class="log-row">
+              <div class="log-icon-success">✅</div>
+              <div style="flex:1;">
+                <div class="log-name">Yousef</div>
+                <div class="log-sub">Metformin dispensed</div>
+              </div>
+              <div class="log-time">8:02 AM</div>
+            </div>
+            <div class="log-row">
+              <div class="log-icon-success">❌</div>
+              <div style="flex:1;">
+                <div class="log-name">Unknown</div>
+                <div class="log-sub">Auth failed</div>
+              </div>
+              <div class="log-time">7:58 AM</div>
+            </div>
+          </div>
+          <div class="bnav">
+            <div class="bni"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div></div>
+            <div class="bni"><div class="bni-icon">🗂</div><div class="bni-lbl">inventory</div></div>
+            <div class="bni"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div></div>
+            <div class="bni active"><div class="bni-icon">🔒</div><div class="bni-lbl">access</div><div class="bni-dot"></div></div>
+            <div class="bni"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Access Control</div>
+      <div class="phone-sub">Fingerprint users · access log</div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div class="prof-header">
+              <div class="prof-title">Profile</div>
+            </div>
+            <div class="prof-user-card">
+              <div class="prof-avatar" style="background:var(--accent);">YA</div>
+              <div>
+                <div class="prof-name">Yousef</div>
+                <div class="prof-email">yousef@example.com</div>
+                <div class="prof-role patient">Patient</div>
+              </div>
+            </div>
+            <div class="section-lbl-sm">Linked Doctor</div>
+            <div class="prof-settings-card" style="margin-bottom:6px;">
+              <div class="prof-row">
+                <div>
+                  <div class="prof-row-lbl">Dr. Sarah Johnson</div>
+                  <div class="prof-row-sub">Linked physician</div>
+                </div>
+                <div style="font-size:6.5px;color:var(--red);font-weight:700;">Unlink</div>
+              </div>
+              <div class="prof-copy-id">
+                <div>
+                  <div class="prof-row-sub">Your Patient ID</div>
+                  <div class="copy-id-val">EP-8472-XQ</div>
+                </div>
+                <div class="copy-btn">Copy</div>
+              </div>
+            </div>
+            <div class="section-lbl-sm">Settings</div>
+            <div class="prof-settings-card" style="margin-bottom:6px;">
+              <div class="prof-row">
+                <div class="prof-row-lbl">24-hour Time</div>
+                <div class="toggle-off"></div>
+              </div>
+              <div class="prof-row">
+                <div class="prof-row-lbl">Dark Mode</div>
+                <div class="toggle-off"></div>
+              </div>
+              <div class="prof-row" style="border-bottom:none;">
+                <div class="prof-row-lbl">Change Password</div>
+                <div style="font-size:8px;color:var(--sub);">›</div>
+              </div>
+            </div>
+            <div class="section-lbl-sm">About</div>
+            <div style="padding:4px 12px;font-size:6px;color:var(--sub);flex-shrink:0;">v1.0.0 · Senior Design 2026 · Ilia State University</div>
+            <div class="signout-btn">Sign Out</div>
+          </div>
+          <div class="bnav">
+            <div class="bni"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div></div>
+            <div class="bni"><div class="bni-icon">🗂</div><div class="bni-lbl">inventory</div></div>
+            <div class="bni"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div></div>
+            <div class="bni"><div class="bni-icon">🔒</div><div class="bni-lbl">access</div></div>
+            <div class="bni active"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div><div class="bni-dot"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Profile</div>
+      <div class="phone-sub">Account · doctor link · settings</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ DOCTOR SCREENS ═══ -->
+<div class="section">
+  <div class="sec-label">Doctor App</div>
+  <div class="sec-title">Doctor Screens — 4 Tabs</div>
+  <div class="phones-row">
+
+    <!-- DOCTOR HOME -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div class="home-greeting">
+              <div class="greet-small">Good morning,</div>
+              <div class="greet-big">Dr. Johnson</div>
+              <div style="font-size:6px;color:var(--sub);margin-top:2px;">Sunday, April 27</div>
+            </div>
+            <div class="stats-row">
+              <div class="dr-stat-card"><div class="dr-stat-val">12</div><div class="dr-stat-lbl">Patients</div></div>
+              <div class="dr-stat-card"><div class="dr-stat-val">47</div><div class="dr-stat-lbl">Doses Today</div></div>
+              <div class="dr-stat-card"><div class="dr-stat-val" style="color:var(--green);">84%</div><div class="dr-stat-lbl">Adherence</div></div>
+            </div>
+            <div class="pt-group-hdr">
+              <div class="pt-group-icon">⚠️</div>
+              <div class="pt-group-lbl">Missed Doses Today</div>
+            </div>
+            <div class="pt-row">
+              <div class="pt-avatar" style="background:var(--red);">MT</div>
+              <div>
+                <div class="pt-name">Mike Thompson</div>
+                <div class="pt-sub">2 taken / 4 total</div>
+              </div>
+              <div class="missed-pill">2 missed</div>
+            </div>
+            <div class="pt-group-hdr">
+              <div class="pt-group-icon">✅</div>
+              <div class="pt-group-lbl">On Track Today</div>
+            </div>
+            <div class="pt-row">
+              <div class="pt-avatar" style="background:var(--accent);">YA</div>
+              <div style="flex:1;">
+                <div class="pt-name">Yousef</div>
+                <div class="pt-sub">Last: 8:02 AM</div>
+              </div>
+              <div class="pt-count">2/4</div>
+            </div>
+            <div class="pt-row">
+              <div class="pt-avatar" style="background:var(--blue);">AL</div>
+              <div style="flex:1;">
+                <div class="pt-name">Anna Lee</div>
+                <div class="pt-sub">Last: 9:15 AM</div>
+              </div>
+              <div class="pt-count">3/4</div>
+            </div>
+          </div>
+          <div class="bnav">
+            <div class="bni active"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div><div class="bni-dot"></div></div>
+            <div class="bni"><div class="bni-icon">👥</div><div class="bni-lbl">patients</div></div>
+            <div class="bni"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div></div>
+            <div class="bni"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Doctor Dashboard</div>
+      <div class="phone-sub">Patient overview · adherence</div>
+    </div>
+
+    <!-- DOCTOR PATIENTS -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div style="padding:10px 12px 4px;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:18px;font-weight:700;">Patients</div>
+                <div style="font-size:6.5px;color:var(--sub);">12 total</div>
+              </div>
+              <div style="font-size:7px;font-weight:700;color:var(--accent);border:1.5px solid var(--accent);border-radius:8px;padding:4px 8px;">+ Add</div>
+            </div>
+            <!-- chips -->
+            <div class="chips-row">
+              <div class="pt-chip">
+                <div class="pt-chip-av sel" style="background:var(--accent);">YA</div>
+                <div class="pt-chip-name">Yousef</div>
+                <div class="pt-chip-pct" style="color:var(--green);">87%</div>
+              </div>
+              <div class="pt-chip">
+                <div class="pt-chip-av" style="background:var(--green);">AL</div>
+                <div class="pt-chip-name">Anna</div>
+                <div class="pt-chip-pct" style="color:var(--green);">92%</div>
+              </div>
+              <div class="pt-chip">
+                <div class="pt-chip-av" style="background:var(--red);">MT</div>
+                <div class="pt-chip-name">Mike</div>
+                <div class="pt-chip-pct" style="color:var(--red);">52%</div>
+              </div>
+              <div class="pt-chip">
+                <div class="pt-chip-av" style="background:var(--blue);">SA</div>
+                <div class="pt-chip-name">Sara</div>
+                <div class="pt-chip-pct" style="color:var(--green);">78%</div>
+              </div>
+            </div>
+            <!-- selected patient card -->
+            <div style="background:var(--card);margin:0 10px 6px;border-radius:14px;padding:10px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div class="pt-chip-av sel" style="background:var(--accent);width:30px;height:30px;font-size:9px;">YA</div>
+                <div>
+                  <div style="font-size:9px;font-weight:700;">Yousef</div>
+                  <div style="font-size:6px;color:var(--sub);">EP-8472-XQ · <span style="color:var(--red);">● Offline</span></div>
+                </div>
+              </div>
+              <div class="stats-row" style="margin:0;">
+                <div class="stat-box" style="flex:1;"><div class="stat-val green" style="font-size:11px;">87%</div><div class="stat-lbl">This Week</div></div>
+                <div class="stat-box" style="flex:1;"><div class="stat-val" style="font-size:11px;">0/3</div><div class="stat-lbl">Today</div></div>
+              </div>
+            </div>
+            <!-- 7-day adherence -->
+            <div class="section-lbl-sm">Last 7 Days</div>
+            <div class="adh-row">
+              <div class="adh-day"><div class="adh-dot-c g">✓</div><div class="adh-day-lbl">M</div></div>
+              <div class="adh-day"><div class="adh-dot-c g">✓</div><div class="adh-day-lbl">T</div></div>
+              <div class="adh-day"><div class="adh-dot-c r">✗</div><div class="adh-day-lbl">W</div></div>
+              <div class="adh-day"><div class="adh-dot-c g">✓</div><div class="adh-day-lbl">T</div></div>
+              <div class="adh-day"><div class="adh-dot-c g">✓</div><div class="adh-day-lbl">F</div></div>
+              <div class="adh-day"><div class="adh-dot-c g">✓</div><div class="adh-day-lbl">S</div></div>
+              <div class="adh-day"><div class="adh-dot-c a">–</div><div class="adh-day-lbl">S</div></div>
+            </div>
+            <!-- active schedule -->
+            <div class="section-lbl-sm">Active Schedule</div>
+            <div style="background:var(--card);margin:0 10px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+              <div class="sch-row">
+                <div class="sch-dot"></div>
+                <div class="sch-info"><div class="sch-drug">Metformin</div><div class="sch-meta">500mg · C1</div></div>
+                <div class="sch-time">4:00 PM</div>
+              </div>
+              <div class="sch-row" style="border-bottom:none;">
+                <div class="sch-dot" style="background:var(--blue);"></div>
+                <div class="sch-info"><div class="sch-drug">Loratadine</div><div class="sch-meta">100mg · C2</div></div>
+                <div class="sch-time">10:00 PM</div>
+              </div>
+            </div>
+          </div>
+          <div class="bnav">
+            <div class="bni"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div></div>
+            <div class="bni active"><div class="bni-icon">👥</div><div class="bni-lbl">patients</div><div class="bni-dot"></div></div>
+            <div class="bni"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div></div>
+            <div class="bni"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Patient Management</div>
+      <div class="phone-sub">7-day adherence · schedule edit</div>
+    </div>
+
+    <!-- DOCTOR SCHEDULE -->
+    <div class="phone-wrap">
+      <div class="phone-shell">
+        <div class="screen">
+          <div class="sbar"><span>1:16</span><span>▲ ☰ 🔋</span></div>
+          <div class="scontent">
+            <div style="padding:10px 12px 6px;flex-shrink:0;">
+              <div style="font-size:18px;font-weight:700;">Today's Schedule</div>
+              <div style="font-size:6.5px;color:var(--sub);">Sunday, April 27</div>
+            </div>
+            <div class="stats-row">
+              <div class="dr-stat-card"><div class="dr-stat-val">12</div><div class="dr-stat-lbl">Patients</div></div>
+              <div class="dr-stat-card"><div class="dr-stat-val">47</div><div class="dr-stat-lbl">Total</div></div>
+              <div class="dr-stat-card"><div class="dr-stat-val" style="color:var(--green);">31</div><div class="dr-stat-lbl">Taken</div></div>
+              <div class="dr-stat-card"><div class="dr-stat-val" style="color:#B07820;">16</div><div class="dr-stat-lbl">Pending</div></div>
+            </div>
+            <!-- Patient group -->
+            <div style="padding:4px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0;">
+              <div class="pt-avatar" style="background:var(--accent);width:18px;height:18px;font-size:6px;">YA</div>
+              <div style="font-size:8px;font-weight:700;">Yousef</div>
+              <div style="font-size:6px;color:var(--sub);">3 doses</div>
+            </div>
+            <div style="background:var(--card);margin:0 10px 6px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+              <div style="display:flex;align-items:center;padding:6px 10px;border-bottom:1px solid #F0EBE3;gap:8px;">
+                <div style="font-size:9px;font-weight:700;color:var(--accent);">8:00 AM</div>
+                <div style="flex:1;font-size:7px;font-weight:600;">Metformin 500mg · C1</div>
+                <div class="taken-badge">Taken</div>
+              </div>
+              <div style="display:flex;align-items:center;padding:6px 10px;border-bottom:1px solid #F0EBE3;gap:8px;">
+                <div style="font-size:9px;font-weight:700;color:var(--accent);">4:00 PM</div>
+                <div style="flex:1;font-size:7px;font-weight:600;">Metformin 500mg · C1</div>
+                <div class="soon-badge">Pending</div>
+              </div>
+              <div style="display:flex;align-items:center;padding:6px 10px;gap:8px;">
+                <div style="font-size:9px;font-weight:700;color:var(--accent);">10:00 PM</div>
+                <div style="flex:1;font-size:7px;font-weight:600;">Loratadine 100mg · C2</div>
+                <div class="soon-badge">Pending</div>
+              </div>
+            </div>
+            <div style="padding:4px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0;">
+              <div class="pt-avatar" style="background:var(--red);width:18px;height:18px;font-size:6px;">MT</div>
+              <div style="font-size:8px;font-weight:700;">Mike Thompson</div>
+              <div style="font-size:6px;color:var(--sub);">4 doses</div>
+            </div>
+            <div style="background:var(--card);margin:0 10px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+              <div style="display:flex;align-items:center;padding:6px 10px;border-bottom:1px solid #F0EBE3;gap:8px;">
+                <div style="font-size:9px;font-weight:700;color:var(--accent);">8:00 AM</div>
+                <div style="flex:1;font-size:7px;font-weight:600;">Aspirin 81mg · C1</div>
+                <div class="missed-badge-sm">Missed</div>
+              </div>
+              <div style="display:flex;align-items:center;padding:6px 10px;gap:8px;">
+                <div style="font-size:9px;font-weight:700;color:var(--accent);">12:00 PM</div>
+                <div style="flex:1;font-size:7px;font-weight:600;">Lisinopril 10mg · C2</div>
+                <div class="missed-badge-sm">Missed</div>
+              </div>
+            </div>
+          </div>
+          <div class="bnav">
+            <div class="bni"><div class="bni-icon">🏠</div><div class="bni-lbl">Home</div></div>
+            <div class="bni"><div class="bni-icon">👥</div><div class="bni-lbl">patients</div></div>
+            <div class="bni active"><div class="bni-icon">📅</div><div class="bni-lbl">schedule</div><div class="bni-dot"></div></div>
+            <div class="bni"><div class="bni-icon">👤</div><div class="bni-lbl">profile</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Doctor Schedule</div>
+      <div class="phone-sub">All patients · dose status</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ FEATURES ═══ -->
+<div class="section">
+  <div class="sec-label">Core Functionality</div>
+  <div class="sec-title">Feature Overview</div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🔐</div>
+      <div class="feat-title">Authentication & Security</div>
+      <ul>
+        <li>Email/password login with Firebase Auth</li>
+        <li>Role-based access: Patient vs. Doctor</li>
+        <li>Password reset via email link</li>
+        <li>Biometric fingerprint on hardware device</li>
+        <li>Enrolled user roles: Owner, Family, Caregiver</li>
+        <li>Full access audit log with timestamps</li>
+      </ul>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💊</div>
+      <div class="feat-title">Medication Management</div>
+      <ul>
+        <li>6 physical compartments (C1–C6)</li>
+        <li>Add, edit, delete medication schedules</li>
+        <li>Group doses by time of day</li>
+        <li>Toggle schedules active/inactive</li>
+        <li>Real-time countdown to next dose</li>
+        <li>Doctors can manage patient schedules remotely</li>
+      </ul>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📦</div>
+      <div class="feat-title">Inventory Tracking</div>
+      <ul>
+        <li>Pill count and capacity per compartment</li>
+        <li>Visual stock level progress bar</li>
+        <li>Low-stock alert when &lt;20% remaining</li>
+        <li>Expiry date tracking per compartment</li>
+        <li>Expiring-soon warning (&lt;60 days)</li>
+        <li>Tap to edit, long-press to clear slot</li>
+      </ul>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Adherence Monitoring</div>
+      <ul>
+        <li>Real-time taken/total counter per day</li>
+        <li>7-day visual dot heatmap per patient</li>
+        <li>Weekly adherence percentage</li>
+        <li>Consecutive-day streak tracking</li>
+        <li>Color-coded status (≥80% green, ≥60% amber)</li>
+        <li>Doctor-wide aggregate adherence score</li>
+      </ul>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">👥</div>
+      <div class="feat-title">Doctor–Patient Linking</div>
+      <ul>
+        <li>Patient shares unique Patient ID</li>
+        <li>Doctor adds patients by entering ID</li>
+        <li>Patient can unlink doctor at any time</li>
+        <li>Doctor views all assigned patients</li>
+        <li>Missed-dose alerts for at-risk patients</li>
+        <li>Patients grouped: missed / on-track / no activity</li>
+      </ul>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📡</div>
+      <div class="feat-title">Hardware Integration</div>
+      <ul>
+        <li>5-step WiFi device pairing wizard</li>
+        <li>2.4 GHz WiFi connection via BLE setup</li>
+        <li>Live device online/offline status indicator</li>
+        <li>Battery level monitoring</li>
+        <li>"Dispense Now" button triggers hardware</li>
+        <li>Physical fingerprint sensor on dispenser</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ TECH STACK ═══ -->
+<div class="section">
+  <div class="sec-label">Technology Stack</div>
+  <div class="sec-title">Built With</div>
+  <div class="tech-row">
+    <div class="tech-chip accent">React Native</div>
+    <div class="tech-chip accent">Expo (Managed Workflow)</div>
+    <div class="tech-chip accent">Expo Router</div>
+    <div class="tech-chip">Firebase Auth</div>
+    <div class="tech-chip">Cloud Firestore</div>
+    <div class="tech-chip">date-fns</div>
+    <div class="tech-chip">expo-clipboard</div>
+    <div class="tech-chip">Custom Hooks</div>
+    <div class="tech-chip">ESP32 / WiFi Hardware</div>
+    <div class="tech-chip">Fingerprint Sensor Module</div>
+  </div>
+</div>
+
+
+<div class="footer">
+  EasyPills · Smart Medication Management · Senior Design Project 2026 · Ilia State University
+</div>
+
+</body>
+</html>

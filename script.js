@@ -211,6 +211,7 @@ const preloaderTl = gsap.timeline({
         }
         initPageAnimations();
         initTeamBarsAnimation();
+        initMobileAppAnimation();
         initParallax();
     }
 });
@@ -419,7 +420,7 @@ function initRevealAnimations() {
 // =====================================================
 function initTeamBarsAnimation() {
     const teamBars = document.querySelectorAll('.team-bar');
-    
+
     if (teamBars.length > 0) {
         ScrollTrigger.create({
             trigger: '.team-bars-container',
@@ -433,6 +434,81 @@ function initTeamBarsAnimation() {
                 });
             }
         });
+    }
+}
+
+// =====================================================
+// MOBILE APP SECTION ANIMATION
+// =====================================================
+function initMobileAppAnimation() {
+    const mobileAppCards = document.querySelectorAll('.mobile-app-card');
+    const mobileAppFeatures = document.querySelectorAll('.mobile-app-feature');
+    const techChips = document.querySelectorAll('.tech-chip');
+
+    if (mobileAppCards.length > 0) {
+        // Animate cards with stagger
+        gsap.fromTo(mobileAppCards,
+            {
+                opacity: 0,
+                y: 60
+            },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.mobile-app-grid',
+                    start: 'top 80%',
+                    once: true
+                }
+            }
+        );
+    }
+
+    if (mobileAppFeatures.length > 0) {
+        // Animate features with stagger
+        gsap.fromTo(mobileAppFeatures,
+            {
+                opacity: 0,
+                x: -30
+            },
+            {
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.mobile-app-grid',
+                    start: 'top 70%',
+                    once: true
+                }
+            }
+        );
+    }
+
+    if (techChips.length > 0) {
+        // Animate tech chips
+        gsap.fromTo(techChips,
+            {
+                opacity: 0,
+                scale: 0.8
+            },
+            {
+                opacity: 1,
+                scale: 1,
+                duration: 0.6,
+                stagger: 0.05,
+                ease: 'back.out(1.7)',
+                scrollTrigger: {
+                    trigger: '.mobile-app-tech',
+                    start: 'top 85%',
+                    once: true
+                }
+            }
+        );
     }
 }
 
